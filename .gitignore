@@ -1,0 +1,5 @@
+cloudflared
+*.bak
+scratch/
+.DS_Store
+*.log

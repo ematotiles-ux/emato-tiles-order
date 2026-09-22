@@ -1,0 +1,7 @@
+cloudflared
+*.bak
+scratch/
+.git
+.gitignore
+.DS_Store
+*.log

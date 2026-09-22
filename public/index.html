@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>emato® TILES - Order Manager v2.0</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <!-- Top App Bar -->
+  <header class="top-header">
+    <div class="header-left">
+      <div class="brand-logo-container">
+        <img src="logo.png" alt="emato® TILES" class="brand-logo-img">
+      </div>
+      <div>
+        <div class="brand-line">
+          <span class="brand-title">EMATO ORDER MANAGER</span>
+          <span class="version-badge">v2.0</span>
+        </div>
+        <div class="brand-subtitle">Tile Dispatch, Factory Allocation & Aging Tracker</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" id="btnOpenNewModal">
+        <span class="icon-plus">+</span>
+        <span>+ New Order</span>
+      </button>
+
+      <button class="btn btn-dark" id="btnExportExcel">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <span>Export Excel</span>
+        <span class="dropdown-caret">▾</span>
+      </button>
+
+      <button class="btn btn-emerald" id="btnGoogleSync">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+        <span>Google Sheet Sync</span>
+      </button>
+
+      <button class="btn btn-dark" id="btnImport">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        <span>Import Excel/CSV</span>
+      </button>
+
+      <button class="btn btn-yellow-outline" id="btnPrint">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        <span>Print</span>
+      </button>
+
+      <button class="btn-icon" title="Settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main View Navigation Tabs Bar -->
+  <nav class="main-tabs-bar">
+    <div class="tabs-left">
+      <button class="nav-tab active" id="tabOrdersSheet" onclick="switchView('orders-sheet')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>
+        <span>Orders Sheet</span>
+      </button>
+
+      <button class="nav-tab" id="tabMerchantPipeline" onclick="switchView('pipeline')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="6" height="18" rx="1"></rect><rect x="14" y="3" width="6" height="18" rx="1"></rect></svg>
+        <span>Merchant Pipeline (Kanban)</span>
+      </button>
+
+      <button class="nav-tab" id="tabTruckDispatch" onclick="switchView('truck-dispatch')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+        <span>Truck Dispatch Planner</span>
+      </button>
+
+      <button class="nav-tab" id="tabFactoriesHub" onclick="switchView('factories-hub')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M17 18h1"></path><path d="M12 18h1"></path><path d="M7 18h1"></path></svg>
+        <span>Factories Hub</span>
+      </button>
+
+      <button class="nav-tab" id="tabDealersCenters" onclick="switchView('dealers-centers')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span>Dealers & Centers</span>
+      </button>
+    </div>
+
+    <div class="tabs-right">
+      <button class="btn-whatsapp" id="btnWhatsappShare" onclick="shareOnWhatsapp()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        <span>WhatsApp Share</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= VIEW 1: ORDERS SHEET ================= -->
+  <main id="viewOrdersSheet" class="view-content active">
+    <!-- Top KPI Cards Row -->
+    <section class="kpi-strip">
+      <div class="kpi-tile">
+        <div class="kpi-icon-wrap icon-blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+        <div>
+          <div class="kpi-tile-label">TOTAL ORDERS</div>
+          <div class="kpi-tile-val" id="kpiTotalOrders">0</div>
+        </div>
+      </div>
+
+      <div class="kpi-tile">
+        <div class="kpi-icon-wrap icon-green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+        </div>
+        <div>
+          <div class="kpi-tile-label">TOTAL BOXES</div>
+          <div class="kpi-tile-val text-green" id="kpiTotalBoxes">0</div>
+        </div>
+      </div>
+
+      <div class="kpi-tile">
+        <div class="kpi-icon-wrap icon-cyan">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+        </div>
+        <div>
+          <div class="kpi-tile-label">TOTAL WEIGHT</div>
+          <div class="kpi-tile-val text-cyan">
+            <span id="kpiTotalKg">0 kg</span>
+            <span class="sub-tonnage" id="kpiTotalTons">0.00 Tons</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-tile">
+        <div class="kpi-icon-wrap icon-red">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+        <div>
+          <div class="kpi-tile-label">PENDING &gt; 15 DAYS</div>
+          <div class="kpi-tile-val text-red" id="kpiPendingAging">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search & Filter Controls -->
+    <section class="search-filter-strip">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="sheetSearchInput" placeholder="Search Party, Center, Factory, Manager, Size...">
+      </div>
+
+      <div class="filter-dropdowns">
+        <select id="filterDealerSelect" class="filter-select">
+          <option value="ALL">All Dealers / Clients</option>
+        </select>
+
+        <select id="filterCenterSelect" class="filter-select">
+          <option value="ALL">All Centers / Cities</option>
+        </select>
+
+        <select id="filterFactorySelect" class="filter-select">
+          <option value="ALL">All Factories</option>
+        </select>
+
+        <select id="filterManagerSelect" class="filter-select">
+          <option value="ALL">All Managers</option>
+        </select>
+
+        <select id="filterGradeSelect" class="filter-select">
+          <option value="ALL">All Grades</option>
+          <option value="PRM">PRM (Premium)</option>
+          <option value="STD">STD (Standard)</option>
+        </select>
+
+        <select id="filterAgeSelect" class="filter-select">
+          <option value="ALL">All Order Ages</option>
+          <option value="<7">&lt; 7 days (Recent)</option>
+          <option value="7-15">7 - 15 days (Warning)</option>
+          <option value=">15">&gt; 15 days (Critical)</option>
+        </select>
+
+        <label class="filter-checkbox-label" title="Check this if you want to include dispatched and billed orders in this sheet">
+          <input type="checkbox" id="showDispatchedCheckbox" onchange="toggleShowDispatched(this.checked)">
+          <span>Show Dispatched</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Truck Consolidation Planner Floating Banner -->
+    <div id="truckPlannerBanner" class="truck-planner-banner" style="display: none;">
+      <div class="planner-info">
+        <div class="planner-icon">🚚</div>
+        <div>
+          <div class="planner-title">Truck Dispatch Consolidation Planner</div>
+          <div class="planner-meta">
+            Selected: <strong id="selectedCount">0</strong> orders | 
+            Boxes: <strong id="selectedBoxes">0</strong> | 
+            Weight: <strong id="selectedKg">0</strong> kg (<strong id="selectedTons">0.00 Tons</strong>)
+          </div>
+        </div>
+      </div>
+      <div class="planner-meter">
+        <div class="meter-bar-container">
+          <div class="meter-bar" id="truckFillBar" style="width: 0%;"></div>
+        </div>
+        <div class="meter-label" id="truckCapacityLabel">0% of 26 MT Truck Capacity</div>
+      </div>
+      <div class="planner-actions">
+        <button class="btn btn-sm btn-outline" onclick="bulkSetStatus('READY')">Mark READY</button>
+        <button class="btn btn-sm btn-outline" onclick="bulkSetStatus('NOT READY')">Mark NOT READY</button>
+        <button class="btn btn-sm btn-blue" onclick="bulkSetStatus('DISPATCHED')">🚚 Mark DISPATCHED</button>
+        <button class="btn btn-sm btn-danger-outline" onclick="bulkDeleteSelected()">🗑️ Delete Selected</button>
+        <button class="btn btn-sm btn-secondary" onclick="clearSelectedOrders()">Clear</button>
+      </div>
+    </div>
+
+    <!-- Orders Sheet Table -->
+    <div class="table-container">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th width="36" class="text-center"><input type="checkbox" id="selectAllCheckbox"></th>
+            <th style="min-width: 105px;" data-sort="order_no" onclick="sortSheetBy('order_no')" title="Click to sort by Order No">ORDER NO <span class="sort-icon">⇅</span></th>
+            <th data-sort="place_date" onclick="sortSheetBy('place_date')" title="Click to sort by Date">PLACE DATE <span class="sort-icon">▼</span></th>
+            <th data-sort="order_day" onclick="sortSheetBy('order_day')" title="Click to sort by Aging">ORDER DAYS <span class="sort-icon">⇅</span></th>
+            <th data-sort="manage_by" onclick="sortSheetBy('manage_by')" title="Click to sort by Manager">MANAGE BY <span class="sort-icon">⇅</span></th>
+            <th data-sort="client_name" onclick="sortSheetBy('client_name')" title="Click to sort by Client">PARTY NAME <span class="sort-icon">⇅</span></th>
+            <th data-sort="city" onclick="sortSheetBy('city')" title="Click to sort by Center">CENTER <span class="sort-icon">⇅</span></th>
+            <th>FACTORY NAME</th>
+            <th>SIZE &amp; PRODUCT</th>
+            <th class="text-right" data-sort="box_qty" onclick="sortSheetBy('box_qty')" title="Click to sort by Total Boxes">BOX QTY <span class="sort-icon">⇅</span></th>
+            <th class="text-right" data-sort="total_weight" onclick="sortSheetBy('total_weight')" title="Click to sort by Total Weight">TOTAL WT (KG) <span class="sort-icon">⇅</span></th>
+            <th class="text-center">STATUS</th>
+            <th width="80" class="text-center">ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTableBody">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bottom Sheets Tab Bar (from Image 2) -->
+    <footer class="bottom-sheets-bar">
+      <span class="sheets-label">SHEETS:</span>
+      <div class="sheets-tabs-list">
+        <button class="sheet-tab active" data-sheet="ALL" onclick="switchSheetTab('ALL')">
+          <span>ALL ORDERS</span>
+          <span class="sheet-count" id="sheetCountAll">0</span>
+        </button>
+
+        <button class="sheet-tab" data-sheet="DEALER" onclick="switchSheetTab('DEALER')">
+          <span>DEALER</span>
+          <span class="sheet-count" id="sheetCountDealer">0</span>
+        </button>
+
+        <button class="sheet-tab" data-sheet="PROJECT" onclick="switchSheetTab('PROJECT')">
+          <span>PROJECT</span>
+          <span class="sheet-count" id="sheetCountProject">0</span>
+        </button>
+
+        <button class="sheet-tab" data-sheet="DEPO ORDER" onclick="switchSheetTab('DEPO ORDER')">
+          <span>DEPO ORDER</span>
+          <span class="sheet-count" id="sheetCountDepo">0</span>
+        </button>
+
+        <button class="sheet-tab" data-sheet="REDY ORDER" onclick="switchSheetTab('REDY ORDER')">
+          <span>READY DISPATCH</span>
+          <span class="sheet-count" id="sheetCountReady">0</span>
+        </button>
+
+        <button class="sheet-tab" data-sheet="DISPATCHED" onclick="switchSheetTab('DISPATCHED')">
+          <span>🚚 DISPATCHED</span>
+          <span class="sheet-count" id="sheetCountDispatched">0</span>
+        </button>
+
+        <button class="sheet-tab" data-sheet="BILLED DONE" onclick="switchSheetTab('BILLED DONE')">
+          <span>🧾 BILLED DONE</span>
+          <span class="sheet-count" id="sheetCountBilled">0</span>
+        </button>
+
+        <button class="sheet-tab add-tab" onclick="addNewSheetTab()">
+          <span>+ New Tab</span>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ================= VIEW 2: FACTORIES HUB ================= -->
+  <main id="viewFactoriesHub" class="view-content" style="display: none;">
+    <div class="factories-hub-wrapper">
+      <div class="hub-header-card">
+        <div>
+          <h2 class="hub-title">Partner Manufacturing Plants (Morbi Hub)</h2>
+          <p class="hub-subtitle">Live breakdown of pending box quantities and tonnage allocated to each factory.</p>
+        </div>
+        <div class="hub-count-badge" id="hubFactoriesCount">0 Factories</div>
+      </div>
+
+      <div class="factory-cards-grid" id="factoryCardsGrid">
+        <!-- Dynamically rendered factory cards -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= VIEW 3: DEALERS & CENTERS HUB ================= -->
+  <main id="viewDealersCenters" class="view-content" style="display: none;">
+    <div class="factories-hub-wrapper">
+      <div class="hub-header-card">
+        <div>
+          <h2 class="hub-title">Dealers (Parties) &amp; Destination Centers</h2>
+          <p class="hub-subtitle">Complete order status, box quantities, and tonnage grouped by client or city.</p>
+        </div>
+        <!-- Sub-tabs to toggle between Dealers view and Centers view -->
+        <div class="hub-subtabs">
+          <button class="hub-subtab active" id="subtabDealers" onclick="switchDealersCentersSubtab('dealers')">
+            <span>🏢 Dealers / Parties</span>
+            <span class="sheet-count" id="badgeTotalDealers">0</span>
+          </button>
+          <button class="hub-subtab" id="subtabCenters" onclick="switchDealersCentersSubtab('centers')">
+            <span>📍 Destination Centers</span>
+            <span class="sheet-count" id="badgeTotalCenters">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dealers / Parties Grid -->
+      <div id="dealersCardsGrid" class="dealers-cards-grid">
+        <!-- Dynamically rendered dealer cards -->
+      </div>
+
+      <!-- Centers / Cities Grid -->
+      <div id="centersCardsGrid" class="dealers-cards-grid" style="display: none;">
+        <!-- Dynamically rendered center cards -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= VIEW 4: MERCHANT PIPELINE (KANBAN) ================= -->
+  <main id="viewMerchantPipeline" class="view-content" style="display: none;">
+    <div class="factories-hub-wrapper">
+      <div class="hub-header-card">
+        <div>
+          <h2 class="hub-title">Merchant Dispatch Pipeline (Kanban)</h2>
+          <p class="hub-subtitle">Visual workflow: Track order status from Pending to Ready and Dispatched.</p>
+        </div>
+        <div class="hub-count-badge" id="pipelineTotalBadge">0 Orders</div>
+      </div>
+
+      <div class="kanban-board">
+        <!-- Column 1: NOT READY / PENDING -->
+        <div class="kanban-col">
+          <div class="kanban-col-header header-pending">
+            <span>⏳ NOT READY / PENDING</span>
+            <span class="badge" id="kanbanPendingCount">0</span>
+          </div>
+          <div class="kanban-col-body" id="kanbanPendingList"></div>
+        </div>
+
+        <!-- Column 2: READY FOR DISPATCH -->
+        <div class="kanban-col">
+          <div class="kanban-col-header header-ready">
+            <span>✓ READY FOR DISPATCH</span>
+            <span class="badge" id="kanbanReadyCount">0</span>
+          </div>
+          <div class="kanban-col-body" id="kanbanReadyList"></div>
+        </div>
+
+        <!-- Column 3: DISPATCHED -->
+        <div class="kanban-col">
+          <div class="kanban-col-header header-dispatched">
+            <span>🚚 DISPATCHED</span>
+            <span class="badge" id="kanbanDispatchedCount">0</span>
+          </div>
+          <div class="kanban-col-body" id="kanbanDispatchedList"></div>
+        </div>
+
+        <!-- Column 4: BILLED DONE -->
+        <div class="kanban-col">
+          <div class="kanban-col-header header-billed">
+            <span>🧾 BILLED DONE</span>
+            <span class="badge" id="kanbanBilledCount">0</span>
+          </div>
+          <div class="kanban-col-body" id="kanbanBilledList"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= FACTORY CLIENT-WISE DRILLDOWN MODAL ================= -->
+  <div class="modal-backdrop" id="factoryClientModal" style="display: none;">
+    <div class="modal-dialog modal-large">
+      <div class="modal-header">
+        <div class="factory-modal-title-wrap">
+          <div class="factory-badge-icon">🏭</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="factoryModalName" class="factory-modal-name">FACTORY</h3>
+              <span class="factory-modal-tag">Manufacturing Unit</span>
+            </div>
+            <p class="factory-modal-sub" id="factoryModalStats"></p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="btn btn-sm btn-primary" id="btnFilterThisFactoryInSheet">
+            View in Orders Sheet →
+          </button>
+          <button class="btn btn-sm btn-whatsapp" id="btnShareFactoryWhatsapp">
+            WhatsApp Summary
+          </button>
+          <button class="modal-close" onclick="closeFactoryModal()">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="background-color: #f8fafc;">
+        <div class="client-drilldown-header">
+          <div class="text-xs text-slate-500 font-semibold uppercase tracking-wider">
+            All Orders Placed in This Factory (Grouped Client-Wise):
+          </div>
+          <div class="text-xs text-sky-600 font-bold" id="factoryClientCountSummary"></div>
+        </div>
+
+        <div class="client-wise-list" id="factoryClientWiseList"></div>
+      </div>
+
+      <div class="modal-footer flex justify-between items-center">
+        <span class="text-xs text-slate-500">
+          💡 Click on any order's <strong>Status badge</strong> to toggle between READY and NOT READY.
+        </span>
+        <button class="btn btn-secondary" onclick="closeFactoryModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CLIENT MULTI-COMPANY ORDER DRILLDOWN MODAL ================= -->
+  <div class="modal-backdrop" id="clientCompanyModal" style="display: none;">
+    <div class="modal-dialog modal-large">
+      <div class="modal-header">
+        <div class="factory-modal-title-wrap">
+          <div class="factory-badge-icon">🏢</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="clientModalName" class="factory-modal-name">CLIENT NAME</h3>
+              <span class="factory-modal-tag" id="clientModalCenterTag">Center</span>
+            </div>
+            <p class="factory-modal-sub" id="clientModalStats"></p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="btn btn-sm btn-primary" id="btnFilterThisClientInSheet">
+            View in Orders Sheet →
+          </button>
+          <button class="btn btn-sm btn-whatsapp" id="btnShareClientWhatsapp">
+            WhatsApp Summary
+          </button>
+          <button class="modal-close" onclick="closeClientModal()">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="background-color: #f8fafc;">
+        <div class="client-drilldown-header">
+          <div class="text-xs text-slate-500 font-semibold uppercase tracking-wider">
+            All Company / Factory Orders Placed by this Client:
+          </div>
+          <div class="text-xs text-sky-600 font-bold" id="clientCompanyCountSummary"></div>
+        </div>
+
+        <div class="client-wise-list" id="clientCompanyWiseList">
+          <!-- Dynamically grouped company by company -->
+        </div>
+      </div>
+
+      <div class="modal-footer flex justify-between items-center">
+        <span class="text-xs text-slate-500">
+          💡 Click on any order's <strong>Status badge</strong> to toggle between READY and NOT READY.
+        </span>
+        <button class="btn btn-secondary" onclick="closeClientModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= READY TO LOAD PDF & WHATSAPP SLIP MODAL ================= -->
+  <div class="modal-backdrop" id="readySlipModal" style="display: none;">
+    <div class="modal-dialog modal-large">
+      <div class="modal-header">
+        <div class="factory-modal-title-wrap">
+          <div class="factory-badge-icon" style="background:#ecfdf5; color:#10b981;">🚚</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="readySlipModalTitle" class="factory-modal-name">READY TO LOAD DISPATCH SLIP</h3>
+              <span class="factory-modal-tag" style="background:#ecfdf5; color:#047857; font-weight:800;" id="readySlipModalBadge">🟢 READY</span>
+            </div>
+            <p class="factory-modal-sub" id="readySlipModalSub">Vehicle loading clearance advice for transporter &amp; party</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" class="btn btn-sm btn-whatsapp" id="btnReadySlipSendWA" onclick="triggerReadySlipWhatsApp()">
+            📲 Send WhatsApp (PDF)
+          </button>
+          <button type="button" class="btn btn-sm btn-primary" id="btnReadySlipDownloadPdf" onclick="triggerReadySlipDownloadPdf()">
+            📥 Download PDF File
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" id="btnReadySlipCopyImg" onclick="copySlipImageToClipboard()" title="Copy slip visual card to clipboard for Ctrl+V paste in WhatsApp">
+            📋 Copy Slip (Ctrl+V)
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="triggerReadySlipPrint()">
+            🖨️ Print
+          </button>
+          <button type="button" class="modal-close" onclick="closeReadySlipModal()">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="background-color: #f1f5f9; max-height: 72vh; overflow-y: auto; padding: 16px;">
+        <div id="readySlipAlertBox" style="display: none; margin-bottom: 14px;"></div>
+        <div id="readySlipPreviewContent" class="slip-paper-preview">
+          <!-- Dynamically filled slip preview -->
+        </div>
+      </div>
+
+      <div class="modal-footer flex justify-between items-center">
+        <div class="text-xs text-slate-500">
+          💡 Click <strong>Send WhatsApp</strong> to open WhatsApp with pre-filled details &amp; PDF link, or <strong>Download PDF</strong> to save file locally.
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="closeReadySlipModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New / Edit Order Modal (Supports Multi-Factory Products in One Order) -->
+  <div class="modal-backdrop" id="orderModal" style="display: none;">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h3 id="modalTitle">New Ceramic Order</h3>
+          <p class="modal-header-sub">Enter client details once &amp; add products from multiple factories in a single order</p>
+        </div>
+        <button class="modal-close" id="btnCloseOrderModal">✕</button>
+      </div>
+
+      <form id="orderForm">
+        <input type="hidden" id="formOrderId">
+        <div class="modal-body">
+          <!-- CARD 1: CLIENT & ORDER HEADER INFO -->
+          <div class="modal-section-card">
+            <div class="section-card-title" style="display: flex; justify-content: space-between; align-items: center;">
+              <div><span class="icon">👤</span> CLIENT &amp; DISPATCH INFORMATION</div>
+              <div id="orderModeBadge" style="display: none;"></div>
+            </div>
+            <div class="form-grid client-grid">
+              <div class="form-group">
+                <label for="formOrderNo">Order Number *</label>
+                <div style="display: flex; gap: 6px;">
+                  <input type="text" id="formOrderNo" list="dlOrderNos" placeholder="e.g. EM-1002" style="font-family: monospace; font-weight: 800; color: #0284c7;" required oninput="handleOrderNoInputChange(this.value)">
+                  <button type="button" class="btn btn-sm btn-secondary" onclick="generateFreshOrderNoUI()" title="Generate New Order Number">✨ New</button>
+                </div>
+                <datalist id="dlOrderNos"></datalist>
+              </div>
+
+              <div class="form-group">
+                <label for="formPlaceDate">Order Date *</label>
+                <input type="date" id="formPlaceDate" required value="2026-09-15">
+              </div>
+
+              <div class="form-group">
+                <label for="formPartyType">Party Type / Sheet *</label>
+                <select id="formPartyType" required>
+                  <option value="DEALER">DEALER</option>
+                  <option value="PROJECT">PROJECT</option>
+                  <option value="DEPO ORDER">DEPO ORDER</option>
+                  <option value="REDY ORDER">REDY ORDER</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="formManageBy">Sales Manager / Managed By *</label>
+                <input type="text" id="formManageBy" list="dlManagers" placeholder="e.g. ANAND BHAI, BHURA BHAI" required>
+              </div>
+
+              <div class="form-group">
+                <label for="formClientName">Party / Client Name *</label>
+                <input type="text" id="formClientName" list="dlClients" placeholder="e.g. SRI SAI VEERABADRA FURNITURE" required>
+              </div>
+
+              <div class="form-group">
+                <label for="formCity">Center (City) *</label>
+                <input type="text" id="formCity" placeholder="e.g. BANGLORE, HYDERABAD, CHENNAI" required>
+              </div>
+
+              <div class="form-group">
+                <label for="formState">State *</label>
+                <select id="formState" required>
+                  <option value="">-- Select Indian State / UT --</option>
+                  <optgroup label="States (28)">
+                    <option value="ANDHRA PRADESH">ANDHRA PRADESH</option>
+                    <option value="ARUNACHAL PRADESH">ARUNACHAL PRADESH</option>
+                    <option value="ASSAM">ASSAM</option>
+                    <option value="BIHAR">BIHAR</option>
+                    <option value="CHHATTISGARH">CHHATTISGARH</option>
+                    <option value="GOA">GOA</option>
+                    <option value="GUJARAT">GUJARAT</option>
+                    <option value="HARYANA">HARYANA</option>
+                    <option value="HIMACHAL PRADESH">HIMACHAL PRADESH</option>
+                    <option value="JHARKHAND">JHARKHAND</option>
+                    <option value="KARNATAKA">KARNATAKA</option>
+                    <option value="KERALA">KERALA</option>
+                    <option value="MADHYA PRADESH">MADHYA PRADESH</option>
+                    <option value="MAHARASHTRA">MAHARASHTRA</option>
+                    <option value="MANIPUR">MANIPUR</option>
+                    <option value="MEGHALAYA">MEGHALAYA</option>
+                    <option value="MIZORAM">MIZORAM</option>
+                    <option value="NAGALAND">NAGALAND</option>
+                    <option value="ODISHA">ODISHA</option>
+                    <option value="PUNJAB">PUNJAB</option>
+                    <option value="RAJASTHAN">RAJASTHAN</option>
+                    <option value="SIKKIM">SIKKIM</option>
+                    <option value="TAMIL NADU">TAMIL NADU</option>
+                    <option value="TELANGANA">TELANGANA</option>
+                    <option value="TRIPURA">TRIPURA</option>
+                    <option value="UTTAR PRADESH">UTTAR PRADESH</option>
+                    <option value="UTTARAKHAND">UTTARAKHAND</option>
+                    <option value="WEST BENGAL">WEST BENGAL</option>
+                  </optgroup>
+                  <optgroup label="Union Territories (8)">
+                    <option value="ANDAMAN AND NICOBAR ISLANDS">ANDAMAN AND NICOBAR ISLANDS</option>
+                    <option value="CHANDIGARH">CHANDIGARH</option>
+                    <option value="DADRA AND NAGAR HAVELI AND DAMAN AND DIU">DADRA AND NAGAR HAVELI AND DAMAN AND DIU</option>
+                    <option value="DELHI">DELHI (NCT)</option>
+                    <option value="JAMMU AND KASHMIR">JAMMU AND KASHMIR</option>
+                    <option value="LADAKH">LADAKH</option>
+                    <option value="LAKSHADWEEP">LAKSHADWEEP</option>
+                    <option value="PUDUCHERRY">PUDUCHERRY</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="formRemark">Order Remark / Loading Instructions (Optional)</label>
+                <input type="text" id="formRemark" placeholder="e.g. Full 26 MT trailer loading from Morbi Hub, priority dispatch">
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2: DYNAMIC FACTORY PRODUCTS GRID -->
+          <div class="modal-section-card mt-3">
+            <div class="section-header-flex">
+              <div>
+                <div class="section-card-title">
+                  <span class="icon">🏭</span> FACTORY PRODUCTS &amp; ALLOCATIONS
+                </div>
+                <div class="section-card-sub">
+                  One client can order from 4 to 5 factories. Add each factory product item below:
+                </div>
+              </div>
+              <button type="button" class="btn btn-sm btn-emerald" id="btnAddItemRow" onclick="addModalItemRow()">
+                <span>+ Add Factory Product</span>
+              </button>
+            </div>
+
+            <div class="modal-items-table-wrapper">
+              <table class="modal-items-table" id="modalItemsTable">
+                <thead>
+                  <tr>
+                    <th width="32" class="text-center">#</th>
+                    <th style="min-width: 150px;">FACTORY NAME *</th>
+                    <th style="min-width: 95px;">SIZE *</th>
+                    <th style="min-width: 140px;">PRODUCT / FINISH</th>
+                    <th style="min-width: 80px;">GRADE</th>
+                    <th style="min-width: 90px;" class="text-right">BOX QTY *</th>
+                    <th style="min-width: 90px;" class="text-right">WT/BOX (KG) *</th>
+                    <th style="min-width: 105px;" class="text-right">TOTAL WT (KG)</th>
+                    <th style="min-width: 105px;">STATUS</th>
+                    <th width="44" class="text-center">DEL</th>
+                  </tr>
+                </thead>
+                <tbody id="modalItemsTableBody">
+                  <!-- Dynamically populated rows -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Live Summary Bar inside Modal -->
+            <div class="modal-summary-bar">
+              <div class="summary-metric">
+                <span class="lbl">FACTORIES:</span>
+                <span class="val text-blue" id="modalSummaryFactories">0 Plants</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-metric">
+                <span class="lbl">TOTAL ITEMS:</span>
+                <span class="val text-purple" id="modalSummaryItems">0 Items</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-metric">
+                <span class="lbl">TOTAL BOXES:</span>
+                <span class="val text-green" id="modalSummaryBoxes">0 Boxes</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-metric">
+                <span class="lbl">COMBINED WEIGHT:</span>
+                <span class="val text-cyan" id="modalSummaryWeight">0 kg</span>
+                <span class="val-sub" id="modalSummaryTonnage">(0.00 MT)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SHARED DATALISTS -->
+        <datalist id="dlFactories">
+          <option value="ASTICA">
+          <option value="LIBERTA">
+          <option value="LEGEND">
+          <option value="VEGANTO">
+          <option value="ASTA">
+          <option value="ISCON">
+          <option value="SIMOLEX">
+          <option value="RIEO">
+          <option value="CLARA">
+          <option value="SPARTEN">
+          <option value="LAUREL">
+          <option value="REVOLVE">
+          <option value="SUNSHINE">
+          <option value="TORO">
+        </datalist>
+
+        <datalist id="dlSizes">
+          <option value="2X4">
+          <option value="16X16">
+          <option value="12X18">
+          <option value="2X2">
+          <option value="12X24">
+          <option value="32X64">
+          <option value="8X48">
+          <option value="8X12">
+        </datalist>
+
+        <datalist id="dlProducts">
+          <option value="GVT MATT">
+          <option value="HIGH GLOSS">
+          <option value="GLOSSY">
+          <option value="CARVING">
+          <option value="PARKING TILES">
+          <option value="ELEVATION TILES">
+          <option value="WALL TILES">
+          <option value="SATIN MATT">
+          <option value="POSTER TILES">
+        </datalist>
+
+        <datalist id="dlManagers">
+          <option value="ANAND BHAI">
+          <option value="BHURA BHAI">
+          <option value="RINKU">
+          <option value="ATUL BHAI">
+          <option value="JIGNESH BHAI">
+        </datalist>
+
+        <datalist id="dlClients">
+          <option value="SRI SAI VEERABADRA FURNITURE">
+          <option value="SRI VENKATADRI HIHER EDUCATION TRUST">
+          <option value="INDOTEK CERAMIC">
+          <option value="ALLIED MARBLE &amp; SANITARY WARE">
+          <option value="THAKUR JI TRADERS">
+          <option value="BALAJI CERAMICS">
+          <option value="ROYAL MARBLE TRADERS">
+          <option value="SHIV SHAKTI TILES">
+          <option value="SHREE RAM TILES &amp; MARBLE">
+          <option value="KIRAN TRADERS">
+        </datalist>
+
+        <div class="modal-footer flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <button type="button" class="btn btn-outline" id="btnCancelOrderModal">Cancel</button>
+            <button type="button" class="btn btn-whatsapp" id="btnOrderModalReadySlip" style="display: none;" onclick="triggerReadySlipFromOrderModal()">
+              📲 WhatsApp Ready Slip (PDF)
+            </button>
+            <button type="button" class="btn btn-danger" id="btnDeleteCurrentOrder" style="display: none;" onclick="deleteCurrentOrder()">
+              🗑️ Delete Order
+            </button>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button" class="btn btn-dark" id="btnAddAnotherRowFooter" onclick="addModalItemRow()">
+              + Add Another Factory Product
+            </button>
+            <button type="submit" class="btn btn-primary" id="btnSaveOrderSubmit">
+              ✓ Save Complete Order
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

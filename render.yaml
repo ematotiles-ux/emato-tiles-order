@@ -1,0 +1,36 @@
+# ==========================================================
+# Render.com Blueprint Specification
+# emato® TILES - Order & Dispatch Management System
+# ==========================================================
+#
+# Deploy this blueprint automatically on Render:
+# 1. Push code to GitHub / GitLab
+# 2. Go to https://dashboard.render.com/blueprints
+# 3. Connect your repository and click Apply!
+#
+services:
+  - type: web
+    name: emato-tiles-orders
+    runtime: ruby
+    region: singapore # Closest low-latency region to India (or frankfurt / oregon)
+    plan: starter # Starter plan ($7/mo) allows persistent SSD disk. Change to 'free' if testing without disk.
+    buildCommand: bundle install && ruby bin/setup_db.rb
+    startCommand: bundle exec ruby server.rb
+    healthCheckPath: /healthz
+    autoDeploy: true
+
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DATABASE_PATH
+        value: /data/eod.db # Point to persistent disk mount (or ./eod.db on free tier)
+      - key: RACK_ENV
+        value: production
+
+    # Persistent Storage: Preserves SQLite database across redeploys & restarts
+    # Note: Requires Render Starter plan ($7/mo + $0.25/GB disk).
+    # If using Render Free tier, comment out the 'disk' section below.
+    disk:
+      name: eod-data
+      mountPath: /data
+      sizeGB: 1
