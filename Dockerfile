@@ -45,4 +45,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:10000/healthz || exit 1
 
 # Initialize DB and start server
-CMD ["sh", "-c", "bundle exec ruby bin/setup_db.rb && bundle exec ruby server.rb"]
+CMD ["bundle", "exec", "ruby", "server.rb"]

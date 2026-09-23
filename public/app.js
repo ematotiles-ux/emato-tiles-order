@@ -49,6 +49,24 @@ let showDispatchedInOrders = false; // Dispatched & Billed orders hidden from ac
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   loadData();
+
+  // Auto-refresh when tab gains focus (e.g. returning to app on mobile or desktop)
+  window.addEventListener('focus', () => {
+    const modal = document.getElementById('orderModal');
+    const isModalOpen = modal && modal.style.display !== 'none' && modal.style.display !== '';
+    if (!isModalOpen) {
+      loadData();
+    }
+  });
+
+  // Background auto-refresh & keep-alive ping every 45 seconds (only when edit modal is closed)
+  setInterval(() => {
+    const modal = document.getElementById('orderModal');
+    const isModalOpen = modal && modal.style.display !== 'none' && modal.style.display !== '';
+    if (!isModalOpen) {
+      loadData();
+    }
+  }, 45000);
 });
 
 // Setup event listeners
@@ -202,6 +220,9 @@ function setupEventListeners() {
 }
 
 // Load data from backend API
+let isInitialLoad = true;
+let loadRetryTimer = null;
+
 async function loadData() {
   try {
     const [ordersRes, factoriesRes, statsRes] = await Promise.all([
@@ -210,16 +231,24 @@ async function loadData() {
       fetch(`${API_BASE}/api/stats`)
     ]);
 
+    if (!ordersRes.ok) throw new Error(`Orders API returned ${ordersRes.status}`);
+
     allOrders = await ordersRes.json();
     allFactories = await factoriesRes.json();
     const stats = await statsRes.json();
 
     updateKPIs(stats);
+    isInitialLoad = false;
   } catch (err) {
-    console.warn('API error:', err);
-    allOrders = [];
-    allFactories = [];
-    updateKPIs({ total_orders: 0, total_boxes: 0, total_weight_kg: 0, total_weight_mt: 0, critical_aging_count: 0 });
+    console.warn('API connection or cold-start notice:', err);
+    // CRITICAL: NEVER wipe existing allOrders on network error or server spin-up!
+    // Keeping existing orders prevents the screen from going blank "after some time".
+    if (isInitialLoad && allOrders.length === 0) {
+      updateKPIs({ total_orders: 0, total_boxes: 0, total_weight_kg: 0, total_weight_mt: 0, critical_aging_count: 0 });
+    }
+    // Automatically retry in 3 seconds to seamlessly catch server wake-up
+    clearTimeout(loadRetryTimer);
+    loadRetryTimer = setTimeout(loadData, 3000);
   }
 
   populateFilterDropdowns();

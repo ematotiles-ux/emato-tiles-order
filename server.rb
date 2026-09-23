@@ -139,15 +139,15 @@ def ensure_database_initialized!
     end
   end
 
-  # Check if table has rows
-  row_count = db.get_first_value("SELECT COUNT(*) FROM orders").to_i
-  if row_count.zero?
-    puts "==> [BOOT] Database is empty. Attempting to restore orders..."
-    # 1. Try restoring latest records from GitHub data-backup branch
-    records = fetch_github_orders_json
+  # Always check and merge latest records from GitHub data-backup branch
+  puts "==> [BOOT] Checking for latest cloud backup on GitHub (#{GITHUB_BRANCH})..."
+  records = fetch_github_orders_json
 
-    # 2. Fall back to local orders.json
-    if (!records || !records.is_a?(Array) || records.empty?)
+  # If GitHub is unavailable or empty, fall back to local orders.json only if DB is empty
+  row_count = db.get_first_value("SELECT COUNT(*) FROM orders").to_i
+  if (!records || !records.is_a?(Array) || records.empty?)
+    if row_count.zero?
+      puts "==> [BOOT] Database is empty and GitHub unavailable. Loading from local orders.json..."
       json_file = File.join(__dir__, 'orders.json')
       if File.file?(json_file)
         begin
@@ -157,46 +157,54 @@ def ensure_database_initialized!
         end
       end
     else
-      puts "==> [BOOT] Retrieved #{records.size} orders from GitHub (#{GITHUB_BRANCH})!"
+      puts "==> [BOOT] GitHub unavailable; retaining #{row_count} existing database orders."
     end
+  else
+    puts "==> [BOOT] Found #{records.size} orders in GitHub cloud backup! Merging into database..."
+  end
 
-    if records.is_a?(Array) && !records.empty?
-      db.transaction do
-        records.each do |r|
-          db.execute(
-            <<-SQL,
-            INSERT OR IGNORE INTO orders (
-              id, order_no, place_date, status, party_type, manage_by, client_name, city, state,
-              factory_name, size, product, finish_optional, grade,
-              box_qty, box_weight, total_weight, remark
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            SQL
-            [
-              r['id'],
-              r['order_no'] || "EM-#{1000 + (r['id'] || 1).to_i}",
-              r['place_date'],
-              r['status'] || 'NOT READY',
-              r['party_type'] || 'DEALER',
-              r['manage_by'] || 'UNASSIGNED',
-              r['client_name'] || '',
-              r['city'] || '',
-              r['state'] || '',
-              r['factory_name'] || '',
-              r['size'] || '',
-              r['product'] || '',
-              r['finish_optional'] || '',
-              r['grade'] || 'PRM',
-              r['box_qty'] || 0,
-              r['box_weight'] || 0.0,
-              r['total_weight'] || 0.0,
-              r['remark'] || ''
-            ]
-          )
-        end
+  if records.is_a?(Array) && !records.empty?
+    db.transaction do
+      records.each do |r|
+        db.execute(
+          <<-SQL,
+          INSERT OR REPLACE INTO orders (
+            id, order_no, place_date, status, party_type, manage_by, client_name, city, state,
+            factory_name, size, product, finish_optional, grade,
+            box_qty, box_weight, total_weight, remark, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          SQL
+          [
+            r['id'],
+            r['order_no'] || "EM-#{1000 + (r['id'] || 1).to_i}",
+            r['place_date'],
+            r['status'] || 'NOT READY',
+            r['party_type'] || 'DEALER',
+            r['manage_by'] || 'UNASSIGNED',
+            r['client_name'] || '',
+            r['city'] || '',
+            r['state'] || '',
+            r['factory_name'] || '',
+            r['size'] || '',
+            r['product'] || '',
+            r['finish_optional'] || '',
+            r['grade'] || 'PRM',
+            r['box_qty'] || 0,
+            r['box_weight'] || 0.0,
+            r['total_weight'] || 0.0,
+            r['remark'] || '',
+            r['created_at'] || Time.now.strftime('%Y-%m-%d %H:%M:%S'),
+            r['updated_at'] || Time.now.strftime('%Y-%m-%d %H:%M:%S')
+          ]
+        )
       end
-      count = db.get_first_value("SELECT COUNT(*) FROM orders").to_i
-      puts "==> [BOOT] Restored #{count} orders into database."
     end
+    count = db.get_first_value("SELECT COUNT(*) FROM orders").to_i
+    puts "==> [BOOT] Active database now successfully contains #{count} orders."
+
+    # Cache to local orders.json
+    json_file = File.join(__dir__, 'orders.json')
+    File.write(json_file, JSON.pretty_generate(records)) rescue nil
   end
 ensure
   db&.close
@@ -1661,6 +1669,22 @@ if __FILE__ == $PROGRAM_NAME
 
   trap('INT') { server.shutdown }
   trap('TERM') { server.shutdown }
+
+  # Keep-Alive Background Thread: Prevents Render free tier idle spin-down
+  Thread.new do
+    target_url = ENV['RENDER_EXTERNAL_URL'] || 'https://emato-tiles-orders.onrender.com'
+    puts "==> [KEEP-ALIVE] Auto-pinger initialized for #{target_url}/healthz (pings every 9 mins)"
+    loop do
+      sleep 540 # 9 minutes (well within Render's 15-minute idle limit)
+      begin
+        uri = URI("#{target_url}/healthz")
+        res = Net::HTTP.get_response(uri)
+        puts "==> [KEEP-ALIVE] Health ping to #{uri} returned #{res.code} (maintaining 24/7 container uptime)"
+      rescue => e
+        warn "==> [KEEP-ALIVE] Health ping notice: #{e.message}"
+      end
+    end
+  end
 
   puts "=========================================================="
   puts "  emato TILES Order Manager v2.0 running on port #{PORT}"
