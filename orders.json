@@ -535,8 +535,8 @@
     "party_type": "PROJECT",
     "manage_by": "CHINTAN BHAI",
     "client_name": "NASHEMAN",
-    "city": "BHOPAL,KARNATAKA",
-    "state": "KARNATAKA",
+    "city": "BHOPAL,MADHYA PRADESH",
+    "state": "MADHYA PRADESH",
     "factory_name": "LIBERTA",
     "size": "2X4",
     "product": "GLOSSY",
@@ -547,6 +547,6 @@
     "total_weight": 64427.2,
     "remark": "",
     "created_at": "2026-09-23 06:19:20",
-    "updated_at": "2026-09-23 06:19:20"
+    "updated_at": "2026-09-23 06:25:29"
   }
 ]
