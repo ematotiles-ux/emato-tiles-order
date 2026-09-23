@@ -4,6 +4,29 @@
 
 const API_BASE = window.location.origin.startsWith('http') ? '' : 'http://localhost:4567';
 
+function getLocalDateString() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function formatAgingBadge(days, compact = false) {
+  const d = Math.max(0, parseInt(days, 10) || 0);
+  if (compact) {
+    if (d === 0) return '<span class="aging-pill aging-recent">✓ Today</span>';
+    if (d < 7) return `<span class="aging-pill aging-recent">✓ ${d}d</span>`;
+    if (d <= 15) return `<span class="aging-pill aging-warning">⏳ ${d}d</span>`;
+    return `<span class="aging-pill aging-critical">⚠️ ${d}d</span>`;
+  }
+  if (d === 0) return '<span class="aging-pill aging-recent">✓ Today</span>';
+  if (d === 1) return '<span class="aging-pill aging-recent">✓ 1 day</span>';
+  if (d < 7) return `<span class="aging-pill aging-recent">✓ ${d} days</span>`;
+  if (d <= 15) return `<span class="aging-pill aging-warning">⏳ ${d} days</span>`;
+  return `<span class="aging-pill aging-critical">⚠️ ${d} days</span>`;
+}
+
 // State
 let allOrders = [];
 let allFactories = [];
@@ -569,14 +592,7 @@ function renderOrdersSheet() {
         `;
       }
 
-      let agingHtml = '';
-      if (o.order_day < 7) {
-        agingHtml = `<span class="aging-pill aging-recent">✓ ${o.order_day} days</span>`;
-      } else if (o.order_day <= 15) {
-        agingHtml = `<span class="aging-pill aging-warning">⏳ ${o.order_day} days</span>`;
-      } else {
-        agingHtml = `<span class="aging-pill aging-critical">⚠️ ${o.order_day} days</span>`;
-      }
+      const agingHtml = formatAgingBadge(o.order_day);
 
       const tr = document.createElement('tr');
       tr.className = `order-row ${grpClass} ${isFirst ? 'order-row-first' : 'order-row-mid'} ${isLast ? 'order-row-last' : ''} ${isMulti ? 'order-row-multi' : 'order-row-single'} ${isSel ? 'row-selected' : ''}`;
@@ -877,14 +893,7 @@ function openFactoryClientModal(factoryName) {
     clientCard.className = 'client-group-card';
 
     const orderRowsHtml = c.orders.map(o => {
-      let agingPill = '';
-      if (o.order_day < 7) {
-        agingPill = `<span class="aging-pill aging-recent">✓ ${o.order_day}d</span>`;
-      } else if (o.order_day <= 15) {
-        agingPill = `<span class="aging-pill aging-warning">⏳ ${o.order_day}d</span>`;
-      } else {
-        agingPill = `<span class="aging-pill aging-critical">⚠️ ${o.order_day}d</span>`;
-      }
+      const agingPill = formatAgingBadge(o.order_day, true);
 
       const isR = o.status === 'READY';
       return `
@@ -1037,14 +1046,7 @@ function openClientCompanyModal(clientName) {
     card.className = 'client-group-card';
 
     const orderRowsHtml = f.orders.map(o => {
-      let agingPill = '';
-      if (o.order_day < 7) {
-        agingPill = `<span class="aging-pill aging-recent">✓ ${o.order_day}d</span>`;
-      } else if (o.order_day <= 15) {
-        agingPill = `<span class="aging-pill aging-warning">⏳ ${o.order_day}d</span>`;
-      } else {
-        agingPill = `<span class="aging-pill aging-critical">⚠️ ${o.order_day}d</span>`;
-      }
+      const agingPill = formatAgingBadge(o.order_day, true);
       const isR = o.status === 'READY';
 
       return `
@@ -1943,7 +1945,7 @@ async function openOrderModal(orderOrOrderNo = null, addNewRow = false) {
       document.getElementById('modalTitle').textContent = `Order ${targetNo} — ${first.client_name}`;
       document.getElementById('formOrderId').value = first.id;
       document.getElementById('formOrderNo').value = targetNo;
-      document.getElementById('formPlaceDate').value = first.place_date || '2026-09-15';
+      document.getElementById('formPlaceDate').value = first.place_date || getLocalDateString();
       document.getElementById('formPartyType').value = first.party_type || 'DEALER';
       document.getElementById('formManageBy').value = first.manage_by || '';
       document.getElementById('formClientName').value = first.client_name || '';
@@ -1979,7 +1981,7 @@ async function openOrderModal(orderOrOrderNo = null, addNewRow = false) {
       document.getElementById('modalTitle').textContent = `Order ${targetNo} — ${o.client_name}`;
       document.getElementById('formOrderId').value = o.id;
       document.getElementById('formOrderNo').value = targetNo;
-      document.getElementById('formPlaceDate').value = o.place_date;
+      document.getElementById('formPlaceDate').value = o.place_date || getLocalDateString();
       document.getElementById('formPartyType').value = o.party_type || 'DEALER';
       document.getElementById('formManageBy').value = o.manage_by || '';
       document.getElementById('formClientName').value = o.client_name || '';
@@ -2004,7 +2006,7 @@ async function openOrderModal(orderOrOrderNo = null, addNewRow = false) {
     document.getElementById('modalTitle').textContent = `New Ceramic Order (${freshNo})`;
     document.getElementById('formOrderId').value = '';
     document.getElementById('formOrderNo').value = freshNo;
-    document.getElementById('formPlaceDate').value = '2026-09-15';
+    document.getElementById('formPlaceDate').value = getLocalDateString();
     document.getElementById('formPartyType').value = (activeSheetTab === 'ALL' || activeSheetTab === 'REDY ORDER') ? 'DEALER' : activeSheetTab;
 
     if (badge) {

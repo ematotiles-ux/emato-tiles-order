@@ -10,10 +10,118 @@ require 'set'
 require 'cgi'
 require 'fileutils'
 require 'time'
+require 'net/http'
+require 'uri'
+require 'base64'
 
 PORT = (ENV['PORT'] || 4567).to_i
 DB_PATH = ENV['DATABASE_PATH'] || File.join(__dir__, 'eod.db')
 PUBLIC_DIR = File.join(__dir__, 'public')
+
+GITHUB_REPO = ENV['GITHUB_REPO'] || 'ematotiles-ux/emato-tiles-order'
+GITHUB_BRANCH = ENV['GITHUB_BACKUP_BRANCH'] || 'data-backup'
+GITHUB_TOKEN = ENV['GITHUB_TOKEN']
+
+def fetch_github_orders_json
+  token = GITHUB_TOKEN || ENV['GITHUB_TOKEN']
+  return nil unless token && !token.strip.empty?
+
+  uri = URI("https://api.github.com/repos/#{GITHUB_REPO}/contents/orders.json?ref=#{GITHUB_BRANCH}")
+  req = Net::HTTP::Get.new(uri)
+  req['Authorization'] = "token #{token.strip}"
+  req['User-Agent'] = 'EmatoTiles-App'
+  req['Accept'] = 'application/vnd.github.v3+json'
+
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  http.open_timeout = 5
+  http.read_timeout = 8
+
+  res = http.request(req)
+  if res.is_a?(Net::HTTPSuccess)
+    data = JSON.parse(res.body)
+    if data['content']
+      content = Base64.decode64(data['content'])
+      JSON.parse(content)
+    end
+  else
+    puts "==> [SYNC] GitHub fetch returned #{res.code}: #{res.body.to_s[0..100]}"
+    nil
+  end
+rescue => e
+  warn "==> [SYNC] GitHub fetch warning: #{e.message}"
+  nil
+end
+
+def push_orders_json_to_github(json_content, token)
+  return unless token && !token.strip.empty?
+  clean_token = token.strip
+
+  # 1. Get current SHA of orders.json on data branch if it exists
+  uri = URI("https://api.github.com/repos/#{GITHUB_REPO}/contents/orders.json?ref=#{GITHUB_BRANCH}")
+  req = Net::HTTP::Get.new(uri)
+  req['Authorization'] = "token #{clean_token}"
+  req['User-Agent'] = 'EmatoTiles-App'
+
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  http.open_timeout = 5
+  http.read_timeout = 10
+
+  res = http.request(req)
+  sha = nil
+  if res.is_a?(Net::HTTPSuccess)
+    data = JSON.parse(res.body)
+    sha = data['sha']
+  end
+
+  # 2. Put updated content
+  put_uri = URI("https://api.github.com/repos/#{GITHUB_REPO}/contents/orders.json")
+  put_req = Net::HTTP::Put.new(put_uri)
+  put_req['Authorization'] = "token #{clean_token}"
+  put_req['User-Agent'] = 'EmatoTiles-App'
+  put_req['Content-Type'] = 'application/json'
+
+  payload = {
+    'message' => "Auto-backup orders data [skip ci]",
+    'content' => Base64.strict_encode64(json_content),
+    'branch' => GITHUB_BRANCH
+  }
+  payload['sha'] = sha if sha
+
+  put_req.body = JSON.generate(payload)
+  put_res = http.request(put_req)
+  if put_res.is_a?(Net::HTTPSuccess)
+    puts "==> [SYNC] Successfully backed up orders to GitHub (#{GITHUB_BRANCH})."
+  else
+    warn "==> [SYNC] GitHub backup returned #{put_res.code}: #{put_res.body.to_s[0..120]}"
+  end
+rescue => e
+  warn "==> [SYNC] Failed to push orders to GitHub: #{e.message}"
+end
+
+def sync_orders_to_json_and_github
+  Thread.new do
+    begin
+      sleep 0.1
+      db = SQLite3::Database.new(DB_PATH)
+      db.results_as_hash = true
+      rows = db.execute('SELECT * FROM orders ORDER BY id ASC')
+      db.close
+
+      json_file = File.join(__dir__, 'orders.json')
+      json_data = JSON.pretty_generate(rows)
+      File.write(json_file, json_data)
+
+      token = GITHUB_TOKEN || ENV['GITHUB_TOKEN']
+      if token && !token.strip.empty?
+        push_orders_json_to_github(json_data, token)
+      end
+    rescue => e
+      warn "==> [SYNC] Background sync warning: #{e.message}"
+    end
+  end
+end
 
 def ensure_database_initialized!
   FileUtils.mkdir_p(File.dirname(DB_PATH))
@@ -23,56 +131,71 @@ def ensure_database_initialized!
   # Check if orders table exists
   table_exists = db.get_first_value("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='orders'").to_i > 0
   unless table_exists
-    puts "==> [BOOT] Initializing database at #{DB_PATH}..."
+    puts "==> [BOOT] Initializing database schema at #{DB_PATH}..."
     schema_file = File.join(__dir__, 'schema.sql')
     if File.file?(schema_file)
       db.execute_batch(File.read(schema_file))
       puts "==> [BOOT] Schema loaded successfully."
     end
+  end
 
-    json_file = File.join(__dir__, 'orders.json')
-    if File.file?(json_file)
-      begin
-        records = JSON.parse(File.read(json_file))
-        if records.is_a?(Array) && !records.empty?
-          db.transaction do
-            records.each do |r|
-              db.execute(
-                <<-SQL,
-                INSERT OR IGNORE INTO orders (
-                  id, order_no, place_date, status, party_type, manage_by, client_name, city, state,
-                  factory_name, size, product, finish_optional, grade,
-                  box_qty, box_weight, total_weight, remark
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                SQL
-                [
-                  r['id'],
-                  r['order_no'] || "EM-#{1000 + (r['id'] || 1).to_i}",
-                  r['place_date'],
-                  r['status'] || 'NOT READY',
-                  r['party_type'] || 'DEALER',
-                  r['manage_by'] || 'UNASSIGNED',
-                  r['client_name'] || '',
-                  r['city'] || '',
-                  r['state'] || '',
-                  r['factory_name'] || '',
-                  r['size'] || '',
-                  r['product'] || '',
-                  r['finish_optional'] || '',
-                  r['grade'] || 'PRM',
-                  r['box_qty'] || 0,
-                  r['box_weight'] || 0.0,
-                  r['total_weight'] || 0.0,
-                  r['remark'] || ''
-                ]
-              )
-            end
-          end
-          puts "==> [BOOT] Seeded #{records.size} orders from orders.json."
+  # Check if table has rows
+  row_count = db.get_first_value("SELECT COUNT(*) FROM orders").to_i
+  if row_count.zero?
+    puts "==> [BOOT] Database is empty. Attempting to restore orders..."
+    # 1. Try restoring latest records from GitHub data-backup branch
+    records = fetch_github_orders_json
+
+    # 2. Fall back to local orders.json
+    if (!records || !records.is_a?(Array) || records.empty?)
+      json_file = File.join(__dir__, 'orders.json')
+      if File.file?(json_file)
+        begin
+          records = JSON.parse(File.read(json_file))
+        rescue => e
+          warn "==> [BOOT] Could not parse local orders.json: #{e.message}"
         end
-      rescue => e
-        warn "==> [BOOT] Warning: Could not seed from orders.json: #{e.message}"
       end
+    else
+      puts "==> [BOOT] Retrieved #{records.size} orders from GitHub (#{GITHUB_BRANCH})!"
+    end
+
+    if records.is_a?(Array) && !records.empty?
+      db.transaction do
+        records.each do |r|
+          db.execute(
+            <<-SQL,
+            INSERT OR IGNORE INTO orders (
+              id, order_no, place_date, status, party_type, manage_by, client_name, city, state,
+              factory_name, size, product, finish_optional, grade,
+              box_qty, box_weight, total_weight, remark
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            SQL
+            [
+              r['id'],
+              r['order_no'] || "EM-#{1000 + (r['id'] || 1).to_i}",
+              r['place_date'],
+              r['status'] || 'NOT READY',
+              r['party_type'] || 'DEALER',
+              r['manage_by'] || 'UNASSIGNED',
+              r['client_name'] || '',
+              r['city'] || '',
+              r['state'] || '',
+              r['factory_name'] || '',
+              r['size'] || '',
+              r['product'] || '',
+              r['finish_optional'] || '',
+              r['grade'] || 'PRM',
+              r['box_qty'] || 0,
+              r['box_weight'] || 0.0,
+              r['total_weight'] || 0.0,
+              r['remark'] || ''
+            ]
+          )
+        end
+      end
+      count = db.get_first_value("SELECT COUNT(*) FROM orders").to_i
+      puts "==> [BOOT] Restored #{count} orders into database."
     end
   end
 ensure
@@ -87,15 +210,14 @@ def get_db
   db
 end
 
-REFERENCE_DATE = Date.parse('2026-09-15')
-
 def calculate_aging(place_date_str)
   begin
     pdate = Date.parse(place_date_str.to_s)
   rescue StandardError
-    pdate = REFERENCE_DATE
+    pdate = Date.today
   end
-  (REFERENCE_DATE - pdate).to_i
+  days = (Date.today - pdate).to_i
+  days < 0 ? 0 : days
 end
 
 def format_date_display(date_str)
@@ -545,6 +667,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     end
   ensure
     db&.close
+    sync_orders_to_json_and_github
   end
 
   def handle_update_order(id, req, res)
@@ -589,6 +712,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     render_json(res, { success: true, order: updated })
   ensure
     db&.close
+    sync_orders_to_json_and_github
   end
 
   def handle_delete_order(id, req, res)
@@ -597,6 +721,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     render_json(res, { success: true, message: "Order #{id} deleted successfully" })
   ensure
     db&.close
+    sync_orders_to_json_and_github
   end
 
   def handle_get_order_group(order_no, req, res)
@@ -726,6 +851,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     })
   ensure
     db&.close
+    sync_orders_to_json_and_github
   end
 
   def handle_delete_order_group(order_no, req, res)
@@ -734,6 +860,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     render_json(res, { success: true, message: "Order #{order_no} deleted successfully" })
   ensure
     db&.close
+    sync_orders_to_json_and_github
   end
 
   def handle_update_order_no_status(order_no, req, res)
@@ -757,6 +884,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     })
   ensure
     db&.close
+    sync_orders_to_json_and_github
   end
 
   def handle_get_stats(req, res)
@@ -849,7 +977,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
 
     res.status = 200
     res['Content-Type'] = 'text/csv; charset=utf-8'
-    res['Content-Disposition'] = "attachment; filename=\"Emato_Orders_#{REFERENCE_DATE}.csv\""
+    res['Content-Disposition'] = "attachment; filename=\"Emato_Orders_#{Date.today}.csv\""
     res.body = csv_data
   ensure
     db&.close

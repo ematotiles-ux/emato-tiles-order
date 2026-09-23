@@ -4,11 +4,7 @@
 
 PRAGMA foreign_keys = ON;
 
-DROP VIEW IF EXISTS v_orders_live;
-DROP VIEW IF EXISTS v_factory_summary;
-DROP TABLE IF EXISTS orders;
-
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     order_no TEXT NOT NULL DEFAULT 'EM-1001', -- Booking Reference / Group ID
     place_date TEXT NOT NULL,
@@ -31,22 +27,23 @@ CREATE TABLE orders (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_orders_order_no ON orders(order_no);
-CREATE INDEX idx_orders_status ON orders(status);
-CREATE INDEX idx_orders_manage_by ON orders(manage_by);
-CREATE INDEX idx_orders_factory_name ON orders(factory_name);
-CREATE INDEX idx_orders_client_name ON orders(client_name);
-CREATE INDEX idx_orders_place_date ON orders(place_date);
-CREATE INDEX idx_orders_party_type ON orders(party_type);
+CREATE INDEX IF NOT EXISTS idx_orders_order_no ON orders(order_no);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+CREATE INDEX IF NOT EXISTS idx_orders_manage_by ON orders(manage_by);
+CREATE INDEX IF NOT EXISTS idx_orders_factory_name ON orders(factory_name);
+CREATE INDEX IF NOT EXISTS idx_orders_client_name ON orders(client_name);
+CREATE INDEX IF NOT EXISTS idx_orders_place_date ON orders(place_date);
+CREATE INDEX IF NOT EXISTS idx_orders_party_type ON orders(party_type);
 
 -- View: v_orders_live
+DROP VIEW IF EXISTS v_orders_live;
 CREATE VIEW v_orders_live AS
 SELECT 
     id,
     order_no,
     place_date,
     strftime('%d/%m/%Y', place_date) AS place_date_formatted,
-    CAST(ROUND(julianday('2026-09-15') - julianday(place_date)) AS INTEGER) AS order_day,
+    CAST(MAX(0, ROUND(julianday('now', 'localtime') - julianday(place_date))) AS INTEGER) AS order_day,
     status,
     party_type,
     manage_by,
@@ -63,8 +60,8 @@ SELECT
     total_weight,
     ROUND(total_weight / 1000.0, 2) AS total_weight_mt,
     CASE 
-        WHEN (julianday('2026-09-15') - julianday(place_date)) >= 15 THEN 'CRITICAL'
-        WHEN (julianday('2026-09-15') - julianday(place_date)) >= 7 THEN 'WARNING'
+        WHEN (julianday('now', 'localtime') - julianday(place_date)) >= 15 THEN 'CRITICAL'
+        WHEN (julianday('now', 'localtime') - julianday(place_date)) >= 7 THEN 'WARNING'
         ELSE 'NORMAL'
     END AS aging_category,
     remark,
@@ -73,6 +70,7 @@ SELECT
 FROM orders;
 
 -- View: v_factory_summary
+DROP VIEW IF EXISTS v_factory_summary;
 CREATE VIEW v_factory_summary AS
 SELECT 
     factory_name,
