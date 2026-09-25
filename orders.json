@@ -795,7 +795,7 @@
     "id": 60,
     "order_no": "EM-1016",
     "place_date": "2026-09-23",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "PROJECT",
     "manage_by": "ANKIT BHAI",
     "client_name": "MAYUR PATEL",
@@ -811,6 +811,6 @@
     "total_weight": 252.0,
     "remark": "",
     "created_at": "2026-09-25 05:41:06",
-    "updated_at": "2026-09-25 05:41:30"
+    "updated_at": "2026-09-25 05:41:47"
   }
 ]
