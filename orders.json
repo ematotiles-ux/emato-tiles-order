@@ -1164,5 +1164,27 @@
     "remark": "",
     "created_at": "2026-09-25 06:11:16",
     "updated_at": "2026-09-25 06:11:16"
+  },
+  {
+    "id": 78,
+    "order_no": "EM-1021",
+    "place_date": "2026-09-24",
+    "status": "NOT READY",
+    "party_type": "DEALER",
+    "manage_by": "BHURA BHAI",
+    "client_name": "INDOTEK CERAMIC",
+    "city": "AMRAVATI,",
+    "state": "MAHARASHTRA",
+    "factory_name": "ASTICA",
+    "size": "2X4",
+    "product": "CARVING",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 350,
+    "box_weight": 26.5,
+    "total_weight": 9275.0,
+    "remark": "",
+    "created_at": "2026-09-25 06:29:51",
+    "updated_at": "2026-09-25 06:29:51"
   }
 ]
