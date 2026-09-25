@@ -503,9 +503,12 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     end
 
     result = grouped.values.map do |f|
+      order_key = ->(r) { (r['order_no'] || "EM-#{1000 + (r['id'] || 1).to_i}").to_s.strip.upcase }
+      unique_orders = f[:orders].map(&order_key).uniq.size
       {
         factory_name: f[:factory_name],
-        total_orders: f[:orders].size,
+        total_orders: unique_orders,
+        total_entries: f[:orders].size,
         total_boxes: f[:total_boxes],
         total_tonnage: (f[:total_weight] / 1000.0).round(1),
         tile_sizes: f[:sizes].to_a.join(', '),
@@ -563,9 +566,13 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     total_boxes = rows.inject(0) { |sum, r| sum + r['box_qty'].to_i }
     total_wt = rows.inject(0.0) { |sum, r| sum + r['total_weight'].to_f }
 
+    order_key = ->(r) { (r['order_no'] || "EM-#{1000 + (r['id'] || 1).to_i}").to_s.strip.upcase }
+    unique_orders_count = rows.map(&order_key).uniq.size
+
     render_json(res, {
       factory_name: factory_name,
-      total_orders: rows.size,
+      total_orders: unique_orders_count,
+      total_entries: rows.size,
       total_boxes: total_boxes,
       total_tonnage: (total_wt / 1000.0).round(1),
       clients_count: clients_list.size,
@@ -901,12 +908,20 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     rows = db.execute('SELECT * FROM orders')
     active_rows = rows.reject { |r| r['status'] == 'DISPATCHED' || r['status'] == 'BILLED DONE' }
 
-    total_orders = active_rows.size
-    all_orders_count = rows.size
-    ready_orders = rows.count { |r| r['status'] == 'READY' }
-    pending_orders = rows.count { |r| r['status'] == 'NOT READY' }
-    dispatched_orders = rows.count { |r| r['status'] == 'DISPATCHED' }
-    billed_orders = rows.count { |r| r['status'] == 'BILLED DONE' }
+    order_key = ->(r) { (r['order_no'] || "EM-#{1000 + (r['id'] || 1).to_i}").to_s.strip.upcase }
+
+    active_order_nos = active_rows.map(&order_key).uniq
+    all_order_nos = rows.map(&order_key).uniq
+
+    total_orders = active_order_nos.size
+    total_entries = active_rows.size
+    all_orders_count = all_order_nos.size
+    all_entries_count = rows.size
+
+    ready_orders = rows.select { |r| r['status'] == 'READY' }.map(&order_key).uniq.size
+    pending_orders = active_rows.select { |r| r['status'] == 'NOT READY' }.map(&order_key).uniq.size
+    dispatched_orders = rows.select { |r| r['status'] == 'DISPATCHED' }.map(&order_key).uniq.size
+    billed_orders = rows.select { |r| r['status'] == 'BILLED DONE' }.map(&order_key).uniq.size
 
     total_boxes = active_rows.inject(0) { |sum, r| sum + r['box_qty'].to_i }
     ready_boxes = rows.select { |r| r['status'] == 'READY' }.inject(0) { |sum, r| sum + r['box_qty'].to_i }
@@ -915,15 +930,17 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
     ready_weight = rows.select { |r| r['status'] == 'READY' }.inject(0.0) { |sum, r| sum + r['total_weight'].to_f }
     pending_weight = rows.select { |r| r['status'] == 'NOT READY' }.inject(0.0) { |sum, r| sum + r['total_weight'].to_f }
 
-    critical_aging = active_rows.count { |r| calculate_aging(r['place_date']) >= 15 }
+    critical_aging = active_rows.select { |r| calculate_aging(r['place_date']) >= 15 }.map(&order_key).uniq.size
 
-    dealer_count = active_rows.count { |r| r['party_type'] == 'DEALER' }
-    project_count = active_rows.count { |r| r['party_type'] == 'PROJECT' }
-    depo_count = active_rows.count { |r| r['party_type'] == 'DEPO ORDER' }
+    dealer_count = active_rows.select { |r| r['party_type'] == 'DEALER' }.map(&order_key).uniq.size
+    project_count = active_rows.select { |r| r['party_type'] == 'PROJECT' }.map(&order_key).uniq.size
+    depo_count = active_rows.select { |r| r['party_type'] == 'DEPO ORDER' }.map(&order_key).uniq.size
 
     stats = {
       total_orders: total_orders,
+      total_entries: total_entries,
       all_orders_count: all_orders_count,
+      all_entries_count: all_entries_count,
       ready_orders: ready_orders,
       pending_orders: pending_orders,
       dispatched_orders: dispatched_orders,

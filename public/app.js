@@ -361,16 +361,25 @@ function updateSheetTabHighlight(tabName) {
 }
 
 function updateSheetTabsCounts() {
+  const countUniqueOrders = (items) => {
+    const set = new Set();
+    items.forEach(o => {
+      const ono = (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase();
+      set.add(ono);
+    });
+    return set.size;
+  };
+
   const activeOrders = allOrders.filter(o => o.status !== 'DISPATCHED' && o.status !== 'BILLED DONE');
   const basePool = showDispatchedInOrders ? allOrders : activeOrders;
 
-  const allCount = basePool.length;
-  const dealerCount = basePool.filter(o => o.party_type === 'DEALER').length;
-  const projectCount = basePool.filter(o => o.party_type === 'PROJECT').length;
-  const depoCount = basePool.filter(o => o.party_type === 'DEPO ORDER').length;
-  const readyCount = allOrders.filter(o => o.status === 'READY').length;
-  const dispatchedCount = allOrders.filter(o => o.status === 'DISPATCHED').length;
-  const billedCount = allOrders.filter(o => o.status === 'BILLED DONE').length;
+  const allCount = countUniqueOrders(basePool);
+  const dealerCount = countUniqueOrders(basePool.filter(o => o.party_type === 'DEALER'));
+  const projectCount = countUniqueOrders(basePool.filter(o => o.party_type === 'PROJECT'));
+  const depoCount = countUniqueOrders(basePool.filter(o => o.party_type === 'DEPO ORDER'));
+  const readyCount = countUniqueOrders(allOrders.filter(o => o.status === 'READY'));
+  const dispatchedCount = countUniqueOrders(allOrders.filter(o => o.status === 'DISPATCHED'));
+  const billedCount = countUniqueOrders(allOrders.filter(o => o.status === 'BILLED DONE'));
 
   const allEl = document.getElementById('sheetCountAll');
   if (allEl) allEl.textContent = allCount;
@@ -911,8 +920,11 @@ function openFactoryClientModal(factoryName) {
 
   const clientList = Object.values(clientMap);
   const totalTonnage = (totalWeight / 1000.0).toFixed(1);
+  const uniqueOrders = new Set(fOrders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
+  const ordersLabel = uniqueOrders === 1 ? '1 order' : `${uniqueOrders} orders`;
+  const itemsLabel = fOrders.length !== uniqueOrders ? ` (${fOrders.length} items)` : '';
 
-  statsEl.textContent = `${fOrders.length} orders · ${totalBoxes.toLocaleString()} boxes · ${totalTonnage} Tons · ${clientList.length} Clients`;
+  statsEl.textContent = `${ordersLabel}${itemsLabel} · ${totalBoxes.toLocaleString()} boxes · ${totalTonnage} Tons · ${clientList.length} Clients`;
   summaryEl.textContent = `Showing ${clientList.length} Clients with orders in ${factoryName}`;
 
   listEl.innerHTML = '';
@@ -1059,9 +1071,12 @@ function openClientCompanyModal(clientName) {
 
   const factoriesList = Object.values(factoryMap);
   const totalTonnage = (totalWeight / 1000.0).toFixed(1);
+  const uniqueOrders = new Set(cOrders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
+  const ordersLabel = uniqueOrders === 1 ? '1 order' : `${uniqueOrders} orders`;
+  const itemsLabel = cOrders.length !== uniqueOrders ? ` (${cOrders.length} items)` : '';
 
   statsEl.innerHTML = `
-    <span>${cOrders.length} items · ${totalBoxes.toLocaleString()} boxes · ${totalTonnage} Tons · Ordered from ${factoriesList.length} Companies</span>
+    <span>${ordersLabel}${itemsLabel} · ${totalBoxes.toLocaleString()} boxes · ${totalTonnage} Tons · Ordered from ${factoriesList.length} Companies</span>
     <button class="btn btn-sm btn-emerald" style="margin-left:12px; font-weight:700;" onclick="addItemsToClientOrder('${escapeHtml(clientName)}')" title="Add New Product Item to this Client's Order">
       ➕ Add Product to Order
     </button>
@@ -1247,6 +1262,7 @@ function renderDealersCenters() {
       card.className = 'dealer-card';
       const fArr = Array.from(d.factories);
       const ton = (d.total_weight / 1000.0).toFixed(1);
+      const uniqueOrdersCount = new Set(d.orders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
 
       card.innerHTML = `
         <div>
@@ -1261,7 +1277,7 @@ function renderDealersCenters() {
           <div class="dealer-metrics" style="margin-top: 12px;">
             <div class="dm-item">
               <div class="lbl">Total Orders</div>
-              <div class="val">${d.orders.length}</div>
+              <div class="val">${uniqueOrdersCount} ${d.orders.length !== uniqueOrdersCount ? `<span style="font-size:0.72rem; color:#64748b; font-weight:normal;">(${d.orders.length} items)</span>` : ''}</div>
             </div>
             <div class="dm-item">
               <div class="lbl">Total Boxes</div>
@@ -1423,8 +1439,9 @@ function renderKanbanPipeline() {
   const bCount = document.getElementById('kanbanBilledCount');
   if (bCount) bCount.textContent = billed.length;
 
+  const uniqueTotalOrders = new Set(allOrders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
   const bTotal = document.getElementById('pipelineTotalBadge');
-  if (bTotal) bTotal.textContent = `${allOrders.length} Orders`;
+  if (bTotal) bTotal.textContent = `${uniqueTotalOrders} Orders (${allOrders.length} Items)`;
 
   const renderCard = (o, nextStatus, nextLabel, btnColor = 'btn-primary') => {
     const card = document.createElement('div');
@@ -1667,7 +1684,18 @@ async function bulkDeleteSelected() {
 // Update Top KPI Cards
 function updateKPIs(stats) {
   if (!stats) return;
-  document.getElementById('kpiTotalOrders').textContent = stats.total_orders || 0;
+  const totOrdersEl = document.getElementById('kpiTotalOrders');
+  if (totOrdersEl) totOrdersEl.textContent = stats.total_orders || 0;
+  const totEntriesEl = document.getElementById('kpiTotalEntries');
+  if (totEntriesEl) {
+    if (stats.total_entries && stats.total_entries !== stats.total_orders) {
+      totEntriesEl.textContent = `${stats.total_entries} Items`;
+      totEntriesEl.style.display = 'block';
+    } else {
+      totEntriesEl.textContent = '';
+      totEntriesEl.style.display = 'none';
+    }
+  }
   document.getElementById('kpiTotalBoxes').textContent = (stats.total_boxes || 0).toLocaleString();
   document.getElementById('kpiTotalKg').textContent = `${(stats.total_weight_kg || 0).toLocaleString()} kg`;
   document.getElementById('kpiTotalTons').textContent = `${(stats.total_weight_mt || 0).toFixed(2)} Tons`;
@@ -2226,27 +2254,32 @@ function exportCSV() {
 
 // WhatsApp Shares
 function shareOnWhatsapp() {
-  const text = encodeURIComponent(`*CERAMIC ORDER MANAGER - EOD DISPATCH REPORT*\nDate: 15/09/2026\nTotal Orders: ${allOrders.length}\nReady for Dispatch: ${allOrders.filter(o => o.status === 'READY').length} orders\nGenerated from Morbi Dispatch Portal.`);
+  const uniqueTotalOrders = new Set(allOrders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
+  const readyOrdersCount = new Set(allOrders.filter(o => o.status === 'READY').map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
+  const text = encodeURIComponent(`*CERAMIC ORDER MANAGER - EOD DISPATCH REPORT*\nDate: 15/09/2026\nTotal Orders: ${uniqueTotalOrders} (${allOrders.length} Items)\nReady for Dispatch: ${readyOrdersCount} orders\nGenerated from Morbi Dispatch Portal.`);
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
 
 function shareFactoryWhatsapp(factoryName) {
   const factoryOrders = allOrders.filter(o => (o.factory_name || '').toLowerCase() === factoryName.toLowerCase());
+  const uniqueOrders = new Set(factoryOrders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
   const clients = new Set(factoryOrders.map(o => o.client_name));
   const totBoxes = factoryOrders.reduce((a, b) => a + b.box_qty, 0);
   const totTons = (factoryOrders.reduce((a, b) => a + b.total_weight, 0) / 1000).toFixed(1);
 
-  const text = encodeURIComponent(`*FACTORY ORDER STATUS: ${factoryName}*\nTotal Orders: ${factoryOrders.length}\nTotal Boxes: ${totBoxes.toLocaleString()}\nTotal Tonnage: ${totTons} Tons\nClients: ${Array.from(clients).join(', ')}`);
+  const text = encodeURIComponent(`*FACTORY ORDER STATUS: ${factoryName}*\nTotal Orders: ${uniqueOrders} (${factoryOrders.length} Items)\nTotal Boxes: ${totBoxes.toLocaleString()}\nTotal Tonnage: ${totTons} Tons\nClients: ${Array.from(clients).join(', ')}`);
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
 
 function shareClientWhatsapp(clientName) {
   const cOrders = allOrders.filter(o => (o.client_name || '').toLowerCase() === clientName.toLowerCase());
+  const uniqueOrders = new Set(cOrders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
   const factories = new Set(cOrders.map(o => o.factory_name));
   const totBoxes = cOrders.reduce((a, b) => a + b.box_qty, 0);
   const totTons = (cOrders.reduce((a, b) => a + b.total_weight, 0) / 1000).toFixed(1);
+  const readyCount = new Set(cOrders.filter(o => o.status === 'READY').map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
 
-  const text = encodeURIComponent(`*CLIENT MULTI-COMPANY ORDER SUMMARY*\nParty: ${clientName}\nCenter: ${cOrders[0] ? cOrders[0].city : ''}\nCompanies Ordered: ${Array.from(factories).join(', ')}\nTotal Boxes: ${totBoxes.toLocaleString()}\nTotal Weight: ${totTons} Tons\nReady for Dispatch: ${cOrders.filter(o => o.status === 'READY').length} items`);
+  const text = encodeURIComponent(`*CLIENT MULTI-COMPANY ORDER SUMMARY*\nParty: ${clientName}\nCenter: ${cOrders[0] ? cOrders[0].city : ''}\nTotal Orders: ${uniqueOrders} (${cOrders.length} Items)\nCompanies Ordered: ${Array.from(factories).join(', ')}\nTotal Boxes: ${totBoxes.toLocaleString()}\nTotal Weight: ${totTons} Tons\nReady for Dispatch: ${readyCount} orders`);
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
 
