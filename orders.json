@@ -1186,5 +1186,27 @@
     "remark": "",
     "created_at": "2026-09-25 06:29:51",
     "updated_at": "2026-09-25 06:29:51"
+  },
+  {
+    "id": 79,
+    "order_no": "EM-1022",
+    "place_date": "2026-09-25",
+    "status": "NOT READY",
+    "party_type": "DEALER",
+    "manage_by": "ANAND BHAI",
+    "client_name": "TILES CENTER",
+    "city": "BYANDOOR",
+    "state": "KARNATAKA",
+    "factory_name": "VALENZA",
+    "size": "2X4",
+    "product": "GLOSSY",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 600,
+    "box_weight": 27.0,
+    "total_weight": 16200.0,
+    "remark": "",
+    "created_at": "2026-09-25 06:33:50",
+    "updated_at": "2026-09-25 06:33:50"
   }
 ]
