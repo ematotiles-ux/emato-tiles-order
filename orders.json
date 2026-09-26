@@ -1092,12 +1092,12 @@
     "product": "CARVING",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 150,
-    "box_weight": 26.6,
-    "total_weight": 3990.0,
+    "box_qty": 320,
+    "box_weight": 26.5,
+    "total_weight": 8480.0,
     "remark": "",
     "created_at": "2026-09-25 06:11:16",
-    "updated_at": "2026-09-25 06:11:16"
+    "updated_at": "2026-09-26 06:30:58"
   },
   {
     "id": 75,
@@ -1115,11 +1115,11 @@
     "finish_optional": "",
     "grade": "PRM",
     "box_qty": 300,
-    "box_weight": 26.6,
-    "total_weight": 7980.0,
+    "box_weight": 26.5,
+    "total_weight": 7950.0,
     "remark": "",
     "created_at": "2026-09-25 06:11:16",
-    "updated_at": "2026-09-25 06:11:16"
+    "updated_at": "2026-09-26 06:30:58"
   },
   {
     "id": 76,
@@ -1136,12 +1136,12 @@
     "product": "MATT",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 225,
-    "box_weight": 26.6,
-    "total_weight": 5985.0,
+    "box_qty": 415,
+    "box_weight": 26.5,
+    "total_weight": 10997.5,
     "remark": "",
     "created_at": "2026-09-25 06:11:16",
-    "updated_at": "2026-09-25 06:11:16"
+    "updated_at": "2026-09-26 06:30:58"
   },
   {
     "id": 77,
@@ -1158,12 +1158,12 @@
     "product": "PORSH",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 30,
-    "box_weight": 26.6,
-    "total_weight": 798.0,
+    "box_qty": 90,
+    "box_weight": 26.5,
+    "total_weight": 2385.0,
     "remark": "",
     "created_at": "2026-09-25 06:11:16",
-    "updated_at": "2026-09-25 06:11:16"
+    "updated_at": "2026-09-26 06:30:58"
   },
   {
     "id": 78,
