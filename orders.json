@@ -1190,7 +1190,7 @@
   {
     "id": 79,
     "order_no": "EM-1022",
-    "place_date": "2026-09-25",
+    "place_date": "2026-09-24",
     "status": "NOT READY",
     "party_type": "DEALER",
     "manage_by": "ANAND BHAI",
@@ -1207,7 +1207,7 @@
     "total_weight": 16200.0,
     "remark": "",
     "created_at": "2026-09-25 06:33:50",
-    "updated_at": "2026-09-25 06:33:50"
+    "updated_at": "2026-09-26 06:35:14"
   },
   {
     "id": 80,
