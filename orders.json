@@ -201,7 +201,7 @@
     "id": 30,
     "order_no": "EM-1009",
     "place_date": "2026-09-18",
-    "status": "READY",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "HARSHIT",
     "client_name": "A.R.HEIGHTS",
@@ -217,7 +217,7 @@
     "total_weight": 31270.0,
     "remark": "",
     "created_at": "2026-09-23 05:05:24",
-    "updated_at": "2026-09-28 05:24:05"
+    "updated_at": "2026-09-28 05:24:07"
   },
   {
     "id": 31,
