@@ -198,6 +198,28 @@
     "updated_at": "2026-09-23 05:59:28"
   },
   {
+    "id": 30,
+    "order_no": "EM-1009",
+    "place_date": "2026-09-18",
+    "status": "NOT READY",
+    "party_type": "PROJECT",
+    "manage_by": "HARSHIT",
+    "client_name": "A.R.HEIGHTS",
+    "city": "KANPUR, UP",
+    "state": "UTTAR PRADESH",
+    "factory_name": "ASTICA",
+    "size": "2X4",
+    "product": "CARVING",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 1180,
+    "box_weight": 26.5,
+    "total_weight": 31270.0,
+    "remark": "",
+    "created_at": "2026-09-23 05:05:24",
+    "updated_at": "2026-09-28 05:45:27"
+  },
+  {
     "id": 31,
     "order_no": "EM-1009",
     "place_date": "2026-09-18",
