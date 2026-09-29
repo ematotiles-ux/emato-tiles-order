@@ -1367,7 +1367,7 @@
     "id": 88,
     "order_no": "EM-1012",
     "place_date": "2026-09-21",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "PROJECT",
     "manage_by": "CHINTAN BHAI",
     "client_name": "SANJAY DALAI",
@@ -1383,7 +1383,7 @@
     "total_weight": 850.0,
     "remark": "",
     "created_at": "2026-09-29 08:33:14",
-    "updated_at": "2026-09-29 08:33:14"
+    "updated_at": "2026-09-29 08:33:22"
   },
   {
     "id": 89,
