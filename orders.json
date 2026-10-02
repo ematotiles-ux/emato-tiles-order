@@ -839,7 +839,7 @@
     "id": 64,
     "order_no": "EM-1017",
     "place_date": "2026-09-19",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEALER",
     "manage_by": "CHINTAN BHAI",
     "client_name": "JAISWAL TILES",
@@ -855,7 +855,7 @@
     "total_weight": 1608.0,
     "remark": "",
     "created_at": "2026-09-25 05:51:04",
-    "updated_at": "2026-09-25 05:51:04"
+    "updated_at": "2026-10-02 05:14:23"
   },
   {
     "id": 65,
