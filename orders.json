@@ -773,7 +773,7 @@
     "id": 61,
     "order_no": "EM-1017",
     "place_date": "2026-09-19",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEALER",
     "manage_by": "CHINTAN BHAI",
     "client_name": "JAISWAL TILES",
@@ -789,13 +789,13 @@
     "total_weight": 48776.0,
     "remark": "",
     "created_at": "2026-09-25 05:51:04",
-    "updated_at": "2026-09-25 05:51:04"
+    "updated_at": "2026-10-02 05:14:30"
   },
   {
     "id": 62,
     "order_no": "EM-1017",
     "place_date": "2026-09-19",
-    "status": "READY",
+    "status": "NOT READY",
     "party_type": "DEALER",
     "manage_by": "CHINTAN BHAI",
     "client_name": "JAISWAL TILES",
@@ -811,13 +811,13 @@
     "total_weight": 21440.0,
     "remark": "",
     "created_at": "2026-09-25 05:51:04",
-    "updated_at": "2026-10-02 05:14:28"
+    "updated_at": "2026-09-25 05:51:04"
   },
   {
     "id": 63,
     "order_no": "EM-1017",
     "place_date": "2026-09-19",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEALER",
     "manage_by": "CHINTAN BHAI",
     "client_name": "JAISWAL TILES",
@@ -833,7 +833,7 @@
     "total_weight": 4288.0,
     "remark": "",
     "created_at": "2026-09-25 05:51:04",
-    "updated_at": "2026-09-25 05:51:04"
+    "updated_at": "2026-10-02 05:14:26"
   },
   {
     "id": 64,
