@@ -1518,28 +1518,6 @@
     "updated_at": "2026-09-30 08:55:50"
   },
   {
-    "id": 95,
-    "order_no": "EM-1027",
-    "place_date": "2026-09-29",
-    "status": "NOT READY",
-    "party_type": "DEPO ORDER",
-    "manage_by": "EMATO TILES",
-    "client_name": "DEOP, OD",
-    "city": "CUTTACK,ODISHA",
-    "state": "ODISHA",
-    "factory_name": "VEGANTO",
-    "size": "12X18",
-    "product": "WALL TILES",
-    "finish_optional": "",
-    "grade": "PRM",
-    "box_qty": 960,
-    "box_weight": 10.5,
-    "total_weight": 10080.0,
-    "remark": "",
-    "created_at": "2026-09-30 04:25:54",
-    "updated_at": "2026-09-30 08:55:50"
-  },
-  {
     "id": 96,
     "order_no": "EM-1028",
     "place_date": "2026-09-30",
