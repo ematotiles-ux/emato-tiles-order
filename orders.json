@@ -547,7 +547,7 @@
     "total_weight": 36630.0,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-03 10:38:30"
+    "updated_at": "2026-10-03 10:41:19"
   },
   {
     "id": 50,
@@ -569,7 +569,7 @@
     "total_weight": 1722.5,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-03 10:38:30"
+    "updated_at": "2026-10-03 10:41:19"
   },
   {
     "id": 51,
@@ -591,7 +591,7 @@
     "total_weight": 1600.0,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-03 10:38:30"
+    "updated_at": "2026-10-03 10:41:19"
   },
   {
     "id": 52,
@@ -613,7 +613,7 @@
     "total_weight": 1120.0,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-03 10:38:30"
+    "updated_at": "2026-10-03 10:41:19"
   },
   {
     "id": 53,
@@ -630,12 +630,12 @@
     "product": "GLOSSY",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 355,
+    "box_qty": 305,
     "box_weight": 26.8,
-    "total_weight": 9514.0,
+    "total_weight": 8174.0,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-03 10:38:30"
+    "updated_at": "2026-10-03 10:41:19"
   },
   {
     "id": 55,
