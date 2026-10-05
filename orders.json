@@ -1780,5 +1780,27 @@
     "remark": "",
     "created_at": "2026-10-03 10:15:16",
     "updated_at": "2026-10-05 04:18:12"
+  },
+  {
+    "id": 110,
+    "order_no": "EM-1034",
+    "place_date": "2026-09-22",
+    "status": "NOT READY",
+    "party_type": "PROJECT",
+    "manage_by": "CHINTAN BHAI",
+    "client_name": "NASHEMAN",
+    "city": "BHOPAL,MADHYA PRADESH",
+    "state": "MADHYA PRADESH",
+    "factory_name": "LIBERTA",
+    "size": "2X4",
+    "product": "GLOSSY",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 2404,
+    "box_weight": 26.8,
+    "total_weight": 64427.2,
+    "remark": "",
+    "created_at": "2026-10-05 06:16:14",
+    "updated_at": "2026-10-05 06:16:14"
   }
 ]
