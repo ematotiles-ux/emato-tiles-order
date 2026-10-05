@@ -1290,12 +1290,12 @@
     "product": "GLOSSY",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 346,
+    "box_qty": 351,
     "box_weight": 40.0,
-    "total_weight": 13840.0,
+    "total_weight": 14040.0,
     "remark": "",
     "created_at": "2026-09-29 08:28:57",
-    "updated_at": "2026-10-05 06:39:59"
+    "updated_at": "2026-10-05 09:29:45"
   },
   {
     "id": 86,
@@ -1312,12 +1312,12 @@
     "product": "HIGH GLOSS",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 252,
+    "box_qty": 247,
     "box_weight": 40.0,
-    "total_weight": 10080.0,
+    "total_weight": 9880.0,
     "remark": "",
     "created_at": "2026-09-29 08:28:57",
-    "updated_at": "2026-09-29 08:28:57"
+    "updated_at": "2026-10-05 09:29:45"
   },
   {
     "id": 87,
@@ -1339,7 +1339,7 @@
     "total_weight": 10800.0,
     "remark": "",
     "created_at": "2026-09-29 08:28:57",
-    "updated_at": "2026-10-05 06:40:02"
+    "updated_at": "2026-10-05 09:29:45"
   },
   {
     "id": 88,
