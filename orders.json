@@ -1757,7 +1757,7 @@
     "total_weight": 13929.2,
     "remark": "",
     "created_at": "2026-10-03 10:15:16",
-    "updated_at": "2026-10-05 04:18:12"
+    "updated_at": "2026-10-05 10:15:08"
   },
   {
     "id": 109,
@@ -1779,7 +1779,7 @@
     "total_weight": 10080.0,
     "remark": "",
     "created_at": "2026-10-03 10:15:16",
-    "updated_at": "2026-10-05 04:18:12"
+    "updated_at": "2026-10-05 10:15:08"
   },
   {
     "id": 111,
@@ -1802,5 +1802,71 @@
     "remark": "",
     "created_at": "2026-10-05 10:12:06",
     "updated_at": "2026-10-05 10:12:06"
+  },
+  {
+    "id": 112,
+    "order_no": "EM-1033",
+    "place_date": "2026-10-01",
+    "status": "NOT READY",
+    "party_type": "DEPO ORDER",
+    "manage_by": "EMATO TILES",
+    "client_name": "DEOP, OD",
+    "city": "CUTTACK,ODISHA",
+    "state": "ODISHA",
+    "factory_name": "ASTICA",
+    "size": "2X4",
+    "product": "CARVING",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 500,
+    "box_weight": 26.5,
+    "total_weight": 13250.0,
+    "remark": "",
+    "created_at": "2026-10-05 10:15:08",
+    "updated_at": "2026-10-05 10:15:08"
+  },
+  {
+    "id": 113,
+    "order_no": "EM-1033",
+    "place_date": "2026-10-01",
+    "status": "NOT READY",
+    "party_type": "DEPO ORDER",
+    "manage_by": "EMATO TILES",
+    "client_name": "DEOP, OD",
+    "city": "CUTTACK,ODISHA",
+    "state": "ODISHA",
+    "factory_name": "ASTICA",
+    "size": "2X4",
+    "product": "MATT",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 130,
+    "box_weight": 26.5,
+    "total_weight": 3445.0,
+    "remark": "",
+    "created_at": "2026-10-05 10:15:08",
+    "updated_at": "2026-10-05 10:15:08"
+  },
+  {
+    "id": 114,
+    "order_no": "EM-1033",
+    "place_date": "2026-10-01",
+    "status": "NOT READY",
+    "party_type": "DEPO ORDER",
+    "manage_by": "EMATO TILES",
+    "client_name": "DEOP, OD",
+    "city": "CUTTACK,ODISHA",
+    "state": "ODISHA",
+    "factory_name": "ASTICA",
+    "size": "2X4",
+    "product": "GLUE",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 130,
+    "box_weight": 26.5,
+    "total_weight": 3445.0,
+    "remark": "",
+    "created_at": "2026-10-05 10:15:08",
+    "updated_at": "2026-10-05 10:15:08"
   }
 ]
