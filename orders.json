@@ -525,7 +525,7 @@
     "total_weight": 36630.0,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-05 06:52:23"
+    "updated_at": "2026-10-06 06:26:47"
   },
   {
     "id": 50,
@@ -547,7 +547,7 @@
     "total_weight": 1722.5,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-05 06:52:23"
+    "updated_at": "2026-10-06 06:26:47"
   },
   {
     "id": 51,
@@ -569,7 +569,7 @@
     "total_weight": 1600.0,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-05 06:52:23"
+    "updated_at": "2026-10-06 06:26:47"
   },
   {
     "id": 52,
@@ -591,7 +591,7 @@
     "total_weight": 1120.0,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-05 06:52:23"
+    "updated_at": "2026-10-06 06:26:47"
   },
   {
     "id": 53,
@@ -613,7 +613,7 @@
     "total_weight": 5172.4,
     "remark": "",
     "created_at": "2026-09-23 06:35:58",
-    "updated_at": "2026-10-05 06:52:23"
+    "updated_at": "2026-10-06 06:26:47"
   },
   {
     "id": 55,
@@ -1868,5 +1868,27 @@
     "remark": "",
     "created_at": "2026-10-05 10:15:08",
     "updated_at": "2026-10-05 10:15:08"
+  },
+  {
+    "id": 115,
+    "order_no": "EM-1014",
+    "place_date": "2026-09-22",
+    "status": "READY",
+    "party_type": "PROJECT",
+    "manage_by": "ANKIT BHAI",
+    "client_name": "C NANJAPPA  SIR",
+    "city": "BANGLORE, KARNATAKA",
+    "state": "KARNATAKA",
+    "factory_name": "LIBERTA",
+    "size": "2X4",
+    "product": "GLOSSY",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 121,
+    "box_weight": 26.5,
+    "total_weight": 3206.5,
+    "remark": "",
+    "created_at": "2026-10-06 06:26:47",
+    "updated_at": "2026-10-06 06:26:47"
   }
 ]
