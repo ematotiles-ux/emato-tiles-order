@@ -2027,7 +2027,7 @@
     "id": 123,
     "order_no": "EM-1036",
     "place_date": "2026-10-07",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "PROJECT",
     "manage_by": "HARSHIT",
     "client_name": "JVS PALACE",
@@ -2043,7 +2043,7 @@
     "total_weight": 6660.0,
     "remark": "",
     "created_at": "2026-10-07 10:43:05",
-    "updated_at": "2026-10-08 08:02:29"
+    "updated_at": "2026-10-08 08:03:11"
   },
   {
     "id": 124,
