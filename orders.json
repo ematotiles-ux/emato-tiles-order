@@ -1631,7 +1631,7 @@
     "id": 103,
     "order_no": "EM-1030",
     "place_date": "2026-10-02",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "PROJECT",
     "manage_by": "TWINKLE",
     "client_name": "BIG SCREEN",
@@ -1647,7 +1647,7 @@
     "total_weight": 48760.0,
     "remark": "",
     "created_at": "2026-10-02 05:38:56",
-    "updated_at": "2026-10-02 05:38:56"
+    "updated_at": "2026-10-09 09:05:32"
   },
   {
     "id": 104,
