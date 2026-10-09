@@ -2137,7 +2137,7 @@
     "id": 128,
     "order_no": "EM-1038",
     "place_date": "2026-10-07",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEALER",
     "manage_by": "POOJA BAREJIYA",
     "client_name": "VIBRANT SALON AND SPA SERVICES PVT LTD",
@@ -2153,6 +2153,6 @@
     "total_weight": 24930.0,
     "remark": "",
     "created_at": "2026-10-09 04:57:11",
-    "updated_at": "2026-10-09 04:57:11"
+    "updated_at": "2026-10-09 04:57:41"
   }
 ]
