@@ -2440,5 +2440,27 @@
     "remark": "",
     "created_at": "2026-10-10 11:36:29",
     "updated_at": "2026-10-10 11:36:29"
+  },
+  {
+    "id": 142,
+    "order_no": "EM-1042",
+    "place_date": "2026-10-10",
+    "status": "NOT READY",
+    "party_type": "DEALER",
+    "manage_by": "POOJA BAREJIYA",
+    "client_name": "KHAN AND SONS",
+    "city": "GHAZIPUR, UP",
+    "state": "UTTAR PRADESH",
+    "factory_name": "ASTICA",
+    "size": "2X4",
+    "product": "CARVING",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 400,
+    "box_weight": 26.5,
+    "total_weight": 10600.0,
+    "remark": "",
+    "created_at": "2026-10-10 12:48:10",
+    "updated_at": "2026-10-10 12:48:10"
   }
 ]
