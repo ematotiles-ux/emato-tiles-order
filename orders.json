@@ -2138,7 +2138,7 @@
     "order_no": "EM-1038",
     "place_date": "2026-10-07",
     "status": "READY",
-    "party_type": "DEALER",
+    "party_type": "PROJECT",
     "manage_by": "POOJA BAREJIYA",
     "client_name": "VIBRANT SALON AND SPA SERVICES PVT LTD",
     "city": "KARJAT , MH",
@@ -2153,7 +2153,7 @@
     "total_weight": 24930.0,
     "remark": "",
     "created_at": "2026-10-09 04:57:11",
-    "updated_at": "2026-10-09 04:57:41"
+    "updated_at": "2026-10-12 06:20:11"
   },
   {
     "id": 129,
