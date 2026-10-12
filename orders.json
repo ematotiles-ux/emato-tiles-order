@@ -2226,7 +2226,7 @@
     "order_no": "EM-1040",
     "place_date": "2026-10-09",
     "status": "READY",
-    "party_type": "DEALER",
+    "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "ARUN TENDULKAR",
     "city": "TIRUPUR , TAMILNADU",
@@ -2241,14 +2241,14 @@
     "total_weight": 2546.0,
     "remark": "",
     "created_at": "2026-10-09 12:12:26",
-    "updated_at": "2026-10-09 12:12:26"
+    "updated_at": "2026-10-12 06:19:44"
   },
   {
     "id": 133,
     "order_no": "EM-1040",
     "place_date": "2026-10-09",
     "status": "READY",
-    "party_type": "DEALER",
+    "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "ARUN TENDULKAR",
     "city": "TIRUPUR , TAMILNADU",
@@ -2263,14 +2263,14 @@
     "total_weight": 1536.0,
     "remark": "",
     "created_at": "2026-10-09 12:12:26",
-    "updated_at": "2026-10-09 12:12:26"
+    "updated_at": "2026-10-12 06:19:44"
   },
   {
     "id": 134,
     "order_no": "EM-1040",
     "place_date": "2026-10-09",
     "status": "READY",
-    "party_type": "DEALER",
+    "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "ARUN TENDULKAR",
     "city": "TIRUPUR , TAMILNADU",
@@ -2285,14 +2285,14 @@
     "total_weight": 5940.0,
     "remark": "",
     "created_at": "2026-10-09 12:12:26",
-    "updated_at": "2026-10-09 12:12:26"
+    "updated_at": "2026-10-12 06:19:44"
   },
   {
     "id": 135,
     "order_no": "EM-1040",
     "place_date": "2026-10-09",
     "status": "READY",
-    "party_type": "DEALER",
+    "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "ARUN TENDULKAR",
     "city": "TIRUPUR , TAMILNADU",
@@ -2307,14 +2307,14 @@
     "total_weight": 4536.0,
     "remark": "",
     "created_at": "2026-10-09 12:12:26",
-    "updated_at": "2026-10-09 12:12:26"
+    "updated_at": "2026-10-12 06:19:44"
   },
   {
     "id": 136,
     "order_no": "EM-1040",
     "place_date": "2026-10-09",
     "status": "READY",
-    "party_type": "DEALER",
+    "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "ARUN TENDULKAR",
     "city": "TIRUPUR , TAMILNADU",
@@ -2329,14 +2329,14 @@
     "total_weight": 6350.0,
     "remark": "",
     "created_at": "2026-10-09 12:12:26",
-    "updated_at": "2026-10-09 12:12:26"
+    "updated_at": "2026-10-12 06:19:44"
   },
   {
     "id": 137,
     "order_no": "EM-1040",
     "place_date": "2026-10-09",
     "status": "READY",
-    "party_type": "DEALER",
+    "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "ARUN TENDULKAR",
     "city": "TIRUPUR , TAMILNADU",
@@ -2351,14 +2351,14 @@
     "total_weight": 7075.5,
     "remark": "",
     "created_at": "2026-10-09 12:12:26",
-    "updated_at": "2026-10-09 12:12:26"
+    "updated_at": "2026-10-12 06:19:44"
   },
   {
     "id": 138,
     "order_no": "EM-1040",
     "place_date": "2026-10-09",
     "status": "READY",
-    "party_type": "DEALER",
+    "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "ARUN TENDULKAR",
     "city": "TIRUPUR , TAMILNADU",
@@ -2373,7 +2373,7 @@
     "total_weight": 2000.0,
     "remark": "",
     "created_at": "2026-10-09 12:12:26",
-    "updated_at": "2026-10-09 12:12:26"
+    "updated_at": "2026-10-12 06:19:44"
   },
   {
     "id": 139,
