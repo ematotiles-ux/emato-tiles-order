@@ -2060,12 +2060,12 @@
     "product": "GLOSSY",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 1000,
+    "box_qty": 1100,
     "box_weight": 26.8,
-    "total_weight": 26800.0,
+    "total_weight": 29480.0,
     "remark": "",
     "created_at": "2026-10-08 07:29:44",
-    "updated_at": "2026-10-08 07:29:44"
+    "updated_at": "2026-10-13 04:41:06"
   },
   {
     "id": 125,
@@ -2087,7 +2087,7 @@
     "total_weight": 5360.0,
     "remark": "",
     "created_at": "2026-10-08 07:29:44",
-    "updated_at": "2026-10-08 07:29:44"
+    "updated_at": "2026-10-13 04:41:06"
   },
   {
     "id": 127,
@@ -2109,7 +2109,7 @@
     "total_weight": 6700.0,
     "remark": "",
     "created_at": "2026-10-08 07:29:44",
-    "updated_at": "2026-10-08 07:29:44"
+    "updated_at": "2026-10-13 04:41:06"
   },
   {
     "id": 128,
