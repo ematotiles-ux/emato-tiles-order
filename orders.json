@@ -1389,7 +1389,7 @@
     "id": 90,
     "order_no": "EM-1012",
     "place_date": "2026-09-21",
-    "status": "READY",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "CHINTAN BHAI",
     "client_name": "SANJAY DALAI",
@@ -1405,7 +1405,7 @@
     "total_weight": 6592.8,
     "remark": "",
     "created_at": "2026-09-29 08:33:14",
-    "updated_at": "2026-09-30 11:17:47"
+    "updated_at": "2026-10-13 07:41:16"
   },
   {
     "id": 91,
@@ -2396,5 +2396,27 @@
     "remark": "",
     "created_at": "2026-10-10 12:48:10",
     "updated_at": "2026-10-10 12:48:10"
+  },
+  {
+    "id": 143,
+    "order_no": "EM-1043",
+    "place_date": "2026-10-13",
+    "status": "NOT READY",
+    "party_type": "DEALER",
+    "manage_by": "BHURA BHAI",
+    "client_name": "INDOTEK CERAMIC",
+    "city": "GUNTUR",
+    "state": "ANDHRA PRADESH",
+    "factory_name": "LEADSUN",
+    "size": "2X2",
+    "product": "PORCELAIN",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 270,
+    "box_weight": 25.0,
+    "total_weight": 6750.0,
+    "remark": "",
+    "created_at": "2026-10-13 07:41:07",
+    "updated_at": "2026-10-13 07:41:07"
   }
 ]
