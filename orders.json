@@ -1738,7 +1738,7 @@
     "updated_at": "2026-10-03 04:42:21"
   },
   {
-    "id": 108,
+    "id": 109,
     "order_no": "EM-1033",
     "place_date": "2026-10-01",
     "status": "NOT READY",
@@ -1747,14 +1747,14 @@
     "client_name": "DEOP, OD",
     "city": "CUTTACK,ODISHA",
     "state": "ODISHA",
-    "factory_name": "ISCON",
+    "factory_name": "VEGANTO",
     "size": "12X18",
     "product": "WALL TILES",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 1436,
-    "box_weight": 9.7,
-    "total_weight": 13929.2,
+    "box_qty": 960,
+    "box_weight": 10.5,
+    "total_weight": 10080.0,
     "remark": "",
     "created_at": "2026-10-03 10:15:16",
     "updated_at": "2026-10-05 10:15:08"
