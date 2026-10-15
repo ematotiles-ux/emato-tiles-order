@@ -971,7 +971,7 @@
     "id": 71,
     "order_no": "EM-1018",
     "place_date": "2026-09-24",
-    "status": "READY",
+    "status": "BILLED DONE",
     "party_type": "DEPO ORDER",
     "manage_by": "EMATO TILES",
     "client_name": "DEOP, OD",
@@ -987,7 +987,7 @@
     "total_weight": 14740.0,
     "remark": "",
     "created_at": "2026-09-25 05:59:20",
-    "updated_at": "2026-10-13 04:33:21"
+    "updated_at": "2026-10-15 04:34:17"
   },
   {
     "id": 72,
