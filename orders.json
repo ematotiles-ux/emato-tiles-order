@@ -2291,7 +2291,7 @@
     "id": 138,
     "order_no": "EM-1040",
     "place_date": "2026-10-09",
-    "status": "READY",
+    "status": "DISPATCHED",
     "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "ARUN TENDULKAR",
@@ -2307,7 +2307,7 @@
     "total_weight": 7000.0,
     "remark": "",
     "created_at": "2026-10-09 12:12:26",
-    "updated_at": "2026-10-14 11:49:59"
+    "updated_at": "2026-10-15 09:37:37"
   },
   {
     "id": 139,
