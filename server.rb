@@ -481,11 +481,12 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
 
   def handle_get_factories(req, res)
     db = get_db
-    rows = db.execute('SELECT * FROM orders ORDER BY factory_name ASC')
+    rows = db.execute("SELECT * FROM orders WHERE status NOT IN ('DISPATCHED', 'BILLED DONE') ORDER BY factory_name ASC")
 
     grouped = {}
     rows.each do |r|
       fn = r['factory_name']
+      next if fn.nil? || fn.to_s.strip.empty?
       grouped[fn] ||= {
         factory_name: fn,
         orders: [],
@@ -523,7 +524,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
 
   def handle_get_factory_clients(factory_name, req, res)
     db = get_db
-    rows = db.execute('SELECT * FROM orders WHERE factory_name = ? COLLATE NOCASE ORDER BY client_name ASC, place_date DESC', [factory_name])
+    rows = db.execute("SELECT * FROM orders WHERE factory_name = ? COLLATE NOCASE AND status NOT IN ('DISPATCHED', 'BILLED DONE') ORDER BY client_name ASC, place_date DESC", [factory_name])
 
     if rows.empty?
       render_json(res, { error: "No orders found for factory #{factory_name}" }, 404)

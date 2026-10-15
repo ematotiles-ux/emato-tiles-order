@@ -315,7 +315,11 @@ function populateFilterDropdowns() {
   const dealers = new Set();
   const centers = new Set();
 
-  allOrders.forEach(o => {
+  const pool = (activeSheetTab === 'DISPATCHED' || activeSheetTab === 'BILLED DONE' || showDispatchedInOrders)
+    ? allOrders
+    : allOrders.filter(o => o.status !== 'DISPATCHED' && o.status !== 'BILLED DONE');
+
+  pool.forEach(o => {
     if (o.factory_name) factories.add(o.factory_name.trim().toUpperCase());
     if (o.manage_by) managers.add(o.manage_by.trim().toUpperCase());
     if (o.client_name) dealers.add(o.client_name.trim().toUpperCase());
@@ -813,33 +817,63 @@ function resetAllFilters() {
   showToast('Filters cleared', 'info');
 }
 
-// Render Factories Hub Cards
+// Render Factories Hub Cards (Active Pending/Ready Orders Only)
 function renderFactoriesHub() {
   const container = document.getElementById('factoryCardsGrid');
+  if (!container) return;
   container.innerHTML = '';
 
-  document.getElementById('hubFactoriesCount').textContent = `${allFactories.length} Factories`;
+  const activeOrders = allOrders.filter(o => o.status !== 'DISPATCHED' && o.status !== 'BILLED DONE');
 
-  if (allFactories.length === 0) {
+  // Group active orders by factory
+  const fMap = {};
+  activeOrders.forEach(o => {
+    const fn = (o.factory_name || 'UNASSIGNED').trim().toUpperCase();
+    if (!fMap[fn]) {
+      fMap[fn] = {
+        factory_name: fn,
+        orders: [],
+        sizes: new Set(),
+        clients: new Set(),
+        total_boxes: 0,
+        total_weight: 0
+      };
+    }
+    fMap[fn].orders.push(o);
+    const prodStr = (o.product && o.product.trim()) ? `${o.size || ''} ${o.product}`.trim() : (o.size || '');
+    if (prodStr) fMap[fn].sizes.add(prodStr);
+    if (o.client_name) fMap[fn].clients.add(o.client_name.trim().toUpperCase());
+    fMap[fn].total_boxes += (o.box_qty || 0);
+    fMap[fn].total_weight += (o.total_weight || 0);
+  });
+
+  const factoryList = Object.values(fMap).sort((a, b) => a.factory_name.localeCompare(b.factory_name));
+
+  const hubCountEl = document.getElementById('hubFactoriesCount');
+  if (hubCountEl) hubCountEl.textContent = `${factoryList.length} Active Factories`;
+
+  if (factoryList.length === 0) {
     container.innerHTML = `
       <div style="grid-column: span 3; text-align: center; padding: 48px 20px; background: white; border: 1px solid var(--border-card); border-radius: var(--radius-lg);">
         <div style="font-size: 2.2rem; margin-bottom: 8px;">🏭</div>
-        <div style="font-weight: 800; font-size: 1.05rem; color: #0f172a; margin-bottom: 4px;">No Factory Allocations Yet</div>
-        <p style="font-size: 0.84rem; color: #64748b; margin-bottom: 16px;">When you add orders with factory names (e.g., LEGEND, LIBERTA, ASTICA), each factory card will appear here with live boxes, tonnage, and client-wise drilldowns!</p>
+        <div style="font-weight: 800; font-size: 1.05rem; color: #0f172a; margin-bottom: 4px;">No Active Factory Allocations</div>
+        <p style="font-size: 0.84rem; color: #64748b; margin-bottom: 16px;">All pending factory orders have been dispatched or billed done. New active orders will appear here automatically.</p>
         <button class="btn btn-primary" onclick="openOrderModal()">+ Add New Order</button>
       </div>
     `;
     return;
   }
 
-  allFactories.forEach(f => {
+  factoryList.forEach(f => {
+    const uniqueOrders = new Set(f.orders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
+    const ton = (f.total_weight / 1000.0).toFixed(1);
     const card = document.createElement('div');
     card.className = 'factory-card';
 
     card.innerHTML = `
       <div class="fc-header" onclick="openFactoryClientModal('${escapeHtml(f.factory_name)}')">
         <h3 class="fc-title">${escapeHtml(f.factory_name)}</h3>
-        <span class="fc-badge">${f.total_orders} ${f.total_orders === 1 ? 'order' : 'orders'}</span>
+        <span class="fc-badge">${uniqueOrders} ${uniqueOrders === 1 ? 'order' : 'orders'}</span>
       </div>
 
       <div class="fc-metrics-box" onclick="openFactoryClientModal('${escapeHtml(f.factory_name)}')">
@@ -849,12 +883,12 @@ function renderFactoriesHub() {
         </div>
         <div class="fc-stat-col" style="text-align: right;">
           <span class="fc-stat-label">Total Tonnage:</span>
-          <span class="fc-stat-val blue">${f.total_tonnage} Tons</span>
+          <span class="fc-stat-val blue">${ton} Tons</span>
         </div>
       </div>
 
       <div class="fc-sizes-row" onclick="openFactoryClientModal('${escapeHtml(f.factory_name)}')">
-        <span class="fc-sizes-label">Tile Sizes:</span> ${escapeHtml(f.tile_sizes || 'Standard Ceramic')}
+        <span class="fc-sizes-label">Tile Sizes:</span> ${escapeHtml(Array.from(f.sizes).join(', ') || 'Standard Ceramic')}
       </div>
 
       <div style="display:flex; gap:8px; margin-top:10px;">
@@ -871,7 +905,7 @@ function renderFactoriesHub() {
   });
 }
 
-// Open Factory Client-Wise Drilldown Modal (Instant In-Memory Calculation)
+// Open Factory Client-Wise Drilldown Modal (Instant In-Memory Calculation - Active Orders Only)
 function openFactoryClientModal(factoryName) {
   currentOpenFactory = factoryName;
   const modal = document.getElementById('factoryClientModal');
@@ -884,12 +918,17 @@ function openFactoryClientModal(factoryName) {
   modal.style.display = 'flex';
 
   const cleanName = factoryName.trim().toUpperCase();
-  const fOrders = allOrders.filter(o => (o.factory_name || '').trim().toUpperCase() === cleanName);
+  // Filter active orders only! Exclude dispatched and billed done orders
+  const fOrders = allOrders.filter(o => {
+    if ((o.factory_name || '').trim().toUpperCase() !== cleanName) return false;
+    if (o.status === 'DISPATCHED' || o.status === 'BILLED DONE') return false;
+    return true;
+  });
 
   if (fOrders.length === 0) {
-    statsEl.textContent = '0 orders';
+    statsEl.textContent = '0 active orders';
     summaryEl.textContent = `No active orders found for ${factoryName}`;
-    listEl.innerHTML = '<div style="text-align:center; padding: 24px; color:#64748b;">No active orders for this factory.</div>';
+    listEl.innerHTML = '<div style="text-align:center; padding: 24px; color:#64748b;">No active pending/ready orders for this factory. All orders have been dispatched or transferred to Billed Done.</div>';
     return;
   }
 
@@ -1029,16 +1068,21 @@ function openClientCompanyModal(clientName) {
   const summaryEl = document.getElementById('clientCompanyCountSummary');
   const listEl = document.getElementById('clientCompanyWiseList');
 
-  const cOrders = allOrders.filter(o => (o.client_name || '').trim().toUpperCase() === clientName.trim().toUpperCase());
+  // Filter active orders only! Exclude dispatched and billed done orders
+  const cOrders = allOrders.filter(o => {
+    if ((o.client_name || '').trim().toUpperCase() !== clientName.trim().toUpperCase()) return false;
+    if (o.status === 'DISPATCHED' || o.status === 'BILLED DONE') return false;
+    return true;
+  });
 
   titleEl.textContent = clientName;
   modal.style.display = 'flex';
 
   if (cOrders.length === 0) {
-    tagEl.textContent = 'No Orders';
-    statsEl.textContent = '0 orders';
-    summaryEl.textContent = 'No orders placed';
-    listEl.innerHTML = '<div style="text-align:center; padding: 24px; color:#64748b;">No active orders found for this client.</div>';
+    tagEl.textContent = 'No Active Orders';
+    statsEl.textContent = '0 active orders';
+    summaryEl.textContent = 'All orders for this client have been dispatched or billed done';
+    listEl.innerHTML = '<div style="text-align:center; padding: 24px; color:#64748b;">No active orders found for this client. All previous orders have been dispatched or transferred to Billed Done.</div>';
     return;
   }
 
@@ -1201,7 +1245,10 @@ function renderDealersCenters() {
   const dealerMap = {};
   const centerMap = {};
 
-  allOrders.forEach(o => {
+  // Active orders only! Exclude dispatched and billed done orders
+  const activeOrders = allOrders.filter(o => o.status !== 'DISPATCHED' && o.status !== 'BILLED DONE');
+
+  activeOrders.forEach(o => {
     const cname = (o.client_name || 'UNKNOWN').trim().toUpperCase();
     if (!dealerMap[cname]) {
       dealerMap[cname] = {
@@ -1255,7 +1302,7 @@ function renderDealersCenters() {
   // Render Dealers Grid
   dealersContainer.innerHTML = '';
   if (dealersList.length === 0) {
-    dealersContainer.innerHTML = '<div style="grid-column: span 3; text-align:center; padding: 36px; color:#64748b;">No dealers recorded yet.</div>';
+    dealersContainer.innerHTML = '<div style="grid-column: span 3; text-align:center; padding: 36px; color:#64748b;">No active dealer orders. All orders have been dispatched or billed done.</div>';
   } else {
     dealersList.forEach(d => {
       const card = document.createElement('div');
@@ -1315,7 +1362,7 @@ function renderDealersCenters() {
   // Render Centers Grid
   centersContainer.innerHTML = '';
   if (centersList.length === 0) {
-    centersContainer.innerHTML = '<div style="grid-column: span 3; text-align:center; padding: 36px; color:#64748b;">No destination centers recorded yet.</div>';
+    centersContainer.innerHTML = '<div style="grid-column: span 3; text-align:center; padding: 36px; color:#64748b;">No active destination centers. All orders have been dispatched or billed done.</div>';
   } else {
     centersList.forEach(c => {
       const card = document.createElement('div');
@@ -2261,25 +2308,35 @@ function shareOnWhatsapp() {
 }
 
 function shareFactoryWhatsapp(factoryName) {
-  const factoryOrders = allOrders.filter(o => (o.factory_name || '').toLowerCase() === factoryName.toLowerCase());
+  const fClean = (factoryName || '').trim().toLowerCase();
+  const factoryOrders = allOrders.filter(o => {
+    if ((o.factory_name || '').trim().toLowerCase() !== fClean) return false;
+    if (o.status === 'DISPATCHED' || o.status === 'BILLED DONE') return false;
+    return true;
+  });
   const uniqueOrders = new Set(factoryOrders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
   const clients = new Set(factoryOrders.map(o => o.client_name));
   const totBoxes = factoryOrders.reduce((a, b) => a + b.box_qty, 0);
   const totTons = (factoryOrders.reduce((a, b) => a + b.total_weight, 0) / 1000).toFixed(1);
 
-  const text = encodeURIComponent(`*FACTORY ORDER STATUS: ${factoryName}*\nTotal Orders: ${uniqueOrders} (${factoryOrders.length} Items)\nTotal Boxes: ${totBoxes.toLocaleString()}\nTotal Tonnage: ${totTons} Tons\nClients: ${Array.from(clients).join(', ')}`);
+  const text = encodeURIComponent(`*FACTORY ORDER STATUS: ${factoryName}*\nTotal Active Orders: ${uniqueOrders} (${factoryOrders.length} Items)\nTotal Boxes: ${totBoxes.toLocaleString()}\nTotal Tonnage: ${totTons} Tons\nClients: ${Array.from(clients).join(', ')}`);
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
 
 function shareClientWhatsapp(clientName) {
-  const cOrders = allOrders.filter(o => (o.client_name || '').toLowerCase() === clientName.toLowerCase());
+  const cClean = (clientName || '').trim().toLowerCase();
+  const cOrders = allOrders.filter(o => {
+    if ((o.client_name || '').trim().toLowerCase() !== cClean) return false;
+    if (o.status === 'DISPATCHED' || o.status === 'BILLED DONE') return false;
+    return true;
+  });
   const uniqueOrders = new Set(cOrders.map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
   const factories = new Set(cOrders.map(o => o.factory_name));
   const totBoxes = cOrders.reduce((a, b) => a + b.box_qty, 0);
   const totTons = (cOrders.reduce((a, b) => a + b.total_weight, 0) / 1000).toFixed(1);
   const readyCount = new Set(cOrders.filter(o => o.status === 'READY').map(o => (o.order_no || `EM-${1000 + o.id}`).trim().toUpperCase())).size;
 
-  const text = encodeURIComponent(`*CLIENT MULTI-COMPANY ORDER SUMMARY*\nParty: ${clientName}\nCenter: ${cOrders[0] ? cOrders[0].city : ''}\nTotal Orders: ${uniqueOrders} (${cOrders.length} Items)\nCompanies Ordered: ${Array.from(factories).join(', ')}\nTotal Boxes: ${totBoxes.toLocaleString()}\nTotal Weight: ${totTons} Tons\nReady for Dispatch: ${readyCount} orders`);
+  const text = encodeURIComponent(`*CLIENT MULTI-COMPANY ORDER SUMMARY*\nParty: ${clientName}\nCenter: ${cOrders[0] ? cOrders[0].city : ''}\nTotal Active Orders: ${uniqueOrders} (${cOrders.length} Items)\nCompanies Ordered: ${Array.from(factories).join(', ')}\nTotal Boxes: ${totBoxes.toLocaleString()}\nTotal Weight: ${totTons} Tons\nReady for Dispatch: ${readyCount} orders`);
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
 
