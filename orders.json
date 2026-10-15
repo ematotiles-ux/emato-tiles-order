@@ -1521,7 +1521,7 @@
     "id": 98,
     "order_no": "EM-1029",
     "place_date": "2026-10-01",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "PROJECT",
     "manage_by": "MOHIT BHAI",
     "client_name": "INDOTEK CERAMIC",
@@ -1537,7 +1537,7 @@
     "total_weight": 3445.0,
     "remark": "",
     "created_at": "2026-10-01 08:12:32",
-    "updated_at": "2026-10-01 08:12:32"
+    "updated_at": "2026-10-15 11:59:16"
   },
   {
     "id": 99,
