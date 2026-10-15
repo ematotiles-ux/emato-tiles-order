@@ -641,7 +641,7 @@
     "id": 56,
     "order_no": "EM-1016",
     "place_date": "2026-09-23",
-    "status": "DISPATCHED",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "ANKIT BHAI",
     "client_name": "MAYUR PATEL",
@@ -657,7 +657,7 @@
     "total_weight": 3484.0,
     "remark": "",
     "created_at": "2026-09-25 05:41:06",
-    "updated_at": "2026-10-15 04:42:05"
+    "updated_at": "2026-10-15 04:42:23"
   },
   {
     "id": 57,
@@ -2071,7 +2071,7 @@
     "id": 128,
     "order_no": "EM-1038",
     "place_date": "2026-10-07",
-    "status": "BILLED DONE",
+    "status": "DISPATCHED",
     "party_type": "PROJECT",
     "manage_by": "POOJA BAREJIYA",
     "client_name": "VIBRANT SALON AND SPA SERVICES PVT LTD",
@@ -2087,7 +2087,7 @@
     "total_weight": 24930.0,
     "remark": "",
     "created_at": "2026-10-09 04:57:11",
-    "updated_at": "2026-10-15 04:42:21"
+    "updated_at": "2026-10-13 07:40:17"
   },
   {
     "id": 129,
