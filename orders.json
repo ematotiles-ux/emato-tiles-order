@@ -1686,12 +1686,12 @@
     "product": "GLOSSY",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 270,
-    "box_weight": 26.8,
-    "total_weight": 7236.0,
+    "box_qty": 360,
+    "box_weight": 26.5,
+    "total_weight": 9540.0,
     "remark": "",
     "created_at": "2026-10-03 04:42:21",
-    "updated_at": "2026-10-16 06:59:16"
+    "updated_at": "2026-10-16 07:01:49"
   },
   {
     "id": 106,
@@ -1708,12 +1708,12 @@
     "product": "SU HG GLOSSY",
     "finish_optional": "",
     "grade": "PRM",
-    "box_qty": 180,
-    "box_weight": 26.8,
-    "total_weight": 4824.0,
+    "box_qty": 60,
+    "box_weight": 40.0,
+    "total_weight": 2400.0,
     "remark": "",
     "created_at": "2026-10-03 04:42:21",
-    "updated_at": "2026-10-03 04:42:21"
+    "updated_at": "2026-10-16 07:01:49"
   },
   {
     "id": 107,
@@ -1731,11 +1731,11 @@
     "finish_optional": "",
     "grade": "PRM",
     "box_qty": 90,
-    "box_weight": 26.8,
-    "total_weight": 2412.0,
+    "box_weight": 26.5,
+    "total_weight": 2385.0,
     "remark": "",
     "created_at": "2026-10-03 04:42:21",
-    "updated_at": "2026-10-13 08:36:45"
+    "updated_at": "2026-10-16 07:01:49"
   },
   {
     "id": 111,
