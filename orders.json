@@ -1675,7 +1675,7 @@
     "id": 105,
     "order_no": "EM-1032",
     "place_date": "2026-10-02",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEALER",
     "manage_by": "RINKU",
     "client_name": "RADHE KRISHNA HARDWARE",
@@ -1691,7 +1691,7 @@
     "total_weight": 7236.0,
     "remark": "",
     "created_at": "2026-10-03 04:42:21",
-    "updated_at": "2026-10-03 04:42:21"
+    "updated_at": "2026-10-16 06:59:16"
   },
   {
     "id": 106,
