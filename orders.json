@@ -1235,7 +1235,7 @@
     "id": 83,
     "order_no": "EM-1025",
     "place_date": "2026-09-28",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "PROJECT",
     "manage_by": "BHURA BHAI",
     "client_name": "INDOTEK CERAMIC",
@@ -1251,7 +1251,7 @@
     "total_weight": 6333.5,
     "remark": "",
     "created_at": "2026-09-28 11:03:40",
-    "updated_at": "2026-09-28 11:03:40"
+    "updated_at": "2026-10-19 04:16:47"
   },
   {
     "id": 84,
