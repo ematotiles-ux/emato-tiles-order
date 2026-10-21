@@ -1675,7 +1675,7 @@
     "id": 105,
     "order_no": "EM-1032",
     "place_date": "2026-10-02",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEALER",
     "manage_by": "RINKU",
     "client_name": "RADHE KRISHNA HARDWARE",
@@ -1691,13 +1691,13 @@
     "total_weight": 9540.0,
     "remark": "",
     "created_at": "2026-10-03 04:42:21",
-    "updated_at": "2026-10-21 04:36:20"
+    "updated_at": "2026-10-16 07:01:49"
   },
   {
     "id": 106,
     "order_no": "EM-1032",
     "place_date": "2026-10-02",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEALER",
     "manage_by": "RINKU",
     "client_name": "RADHE KRISHNA HARDWARE",
@@ -1713,7 +1713,7 @@
     "total_weight": 2400.0,
     "remark": "",
     "created_at": "2026-10-03 04:42:21",
-    "updated_at": "2026-10-16 07:01:49"
+    "updated_at": "2026-10-21 04:36:23"
   },
   {
     "id": 107,
