@@ -2027,7 +2027,7 @@
     "id": 125,
     "order_no": "EM-1037",
     "place_date": "2026-10-09",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEPO ORDER",
     "manage_by": "EMATO TILES",
     "client_name": "DEOP, OD",
@@ -2043,7 +2043,7 @@
     "total_weight": 5360.0,
     "remark": "",
     "created_at": "2026-10-08 07:29:44",
-    "updated_at": "2026-10-13 04:46:29"
+    "updated_at": "2026-10-22 05:04:04"
   },
   {
     "id": 127,
