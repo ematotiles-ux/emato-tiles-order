@@ -2638,5 +2638,27 @@
     "remark": "",
     "created_at": "2026-10-14 11:20:02",
     "updated_at": "2026-10-20 10:07:23"
+  },
+  {
+    "id": 155,
+    "order_no": "EM-1047",
+    "place_date": "2026-10-22",
+    "status": "NOT READY",
+    "party_type": "DEALER",
+    "manage_by": "ATUL BHAI",
+    "client_name": "INDOTEK CERAMIC",
+    "city": "HOSUR,TAMIL NADU",
+    "state": "TAMIL NADU",
+    "factory_name": "ASTICA",
+    "size": "2X4",
+    "product": "CARVING",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 300,
+    "box_weight": 26.5,
+    "total_weight": 7950.0,
+    "remark": "",
+    "created_at": "2026-10-22 05:19:00",
+    "updated_at": "2026-10-22 05:19:00"
   }
 ]
