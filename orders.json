@@ -1829,7 +1829,7 @@
     "id": 115,
     "order_no": "EM-1014",
     "place_date": "2026-09-22",
-    "status": "READY",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "ANKIT BHAI",
     "client_name": "C NANJAPPA  SIR",
@@ -1845,7 +1845,7 @@
     "total_weight": 4797.2,
     "remark": "",
     "created_at": "2026-10-06 06:26:47",
-    "updated_at": "2026-10-06 06:33:18"
+    "updated_at": "2026-10-22 04:30:36"
   },
   {
     "id": 116,
