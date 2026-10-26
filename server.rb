@@ -139,6 +139,17 @@ def ensure_database_initialized!
     end
   end
 
+  # Auto-migrate dispatch_date column if missing
+  begin
+    cols = db.execute("PRAGMA table_info(orders)").map { |c| c['name'] }
+    unless cols.include?('dispatch_date')
+      db.execute("ALTER TABLE orders ADD COLUMN dispatch_date TEXT DEFAULT ''")
+      puts "==> [BOOT] Migration applied: Added dispatch_date column to orders table."
+    end
+  rescue => e
+    warn "==> [BOOT] Migration notice: #{e.message}"
+  end
+
   # Always check and merge latest records from GitHub data-backup branch
   puts "==> [BOOT] Checking for latest cloud backup on GitHub (#{GITHUB_BRANCH})..."
   records = fetch_github_orders_json
@@ -171,8 +182,8 @@ def ensure_database_initialized!
           INSERT OR REPLACE INTO orders (
             id, order_no, place_date, status, party_type, manage_by, client_name, city, state,
             factory_name, size, product, finish_optional, grade,
-            box_qty, box_weight, total_weight, remark, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            box_qty, box_weight, total_weight, remark, created_at, updated_at, dispatch_date
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           SQL
           [
             r['id'],
@@ -194,7 +205,8 @@ def ensure_database_initialized!
             r['total_weight'] || 0.0,
             r['remark'] || '',
             r['created_at'] || Time.now.strftime('%Y-%m-%d %H:%M:%S'),
-            r['updated_at'] || Time.now.strftime('%Y-%m-%d %H:%M:%S')
+            r['updated_at'] || Time.now.strftime('%Y-%m-%d %H:%M:%S'),
+            r['dispatch_date'] || ''
           ]
         )
       end
@@ -628,19 +640,20 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
           finish = (it['finish_optional'] || '').to_s.strip.upcase
           status = (it['status'] || 'NOT READY').to_s.strip.upcase
           it_remark = (it['remark'] && !it['remark'].empty?) ? it['remark'].to_s.strip.upcase : remark
+          disp_date = (it['dispatch_date'] || '').to_s.strip
 
           db.execute(
             <<-SQL,
             INSERT INTO orders (
               order_no, place_date, status, party_type, manage_by, client_name, city, state,
               factory_name, size, product, finish_optional, grade,
-              box_qty, box_weight, total_weight, remark
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+              box_qty, box_weight, total_weight, remark, dispatch_date
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             SQL
             [
               order_no, pdate, status, party_type, manage_by, client_name, city, state,
               fn, size, product, finish, grade,
-              box_qty, box_weight, total_weight, it_remark
+              box_qty, box_weight, total_weight, it_remark, disp_date
             ]
           )
           inserted_ids << db.last_insert_row_id
@@ -659,14 +672,15 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
       box_qty = data['box_qty'].to_i
       box_weight = data['box_weight'].to_f
       total_weight = data['total_weight'] ? data['total_weight'].to_f : (box_qty * box_weight).round(2)
+      disp_date = (data['dispatch_date'] || '').to_s.strip
 
       db.execute(
         <<-SQL,
         INSERT INTO orders (
           order_no, place_date, status, party_type, manage_by, client_name, city, state,
           factory_name, size, product, finish_optional, grade,
-          box_qty, box_weight, total_weight, remark
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          box_qty, box_weight, total_weight, remark, dispatch_date
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         SQL
         [
           order_no, pdate, (data['status'] || 'NOT READY').to_s.strip.upcase, party_type, manage_by, client_name, city, state,
@@ -675,7 +689,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
           (data['product'] || '').to_s.strip.upcase,
           (data['finish_optional'] || '').to_s.strip.upcase,
           (data['grade'] || 'PRM').to_s.strip.upcase,
-          box_qty, box_weight, total_weight, remark
+          box_qty, box_weight, total_weight, remark, disp_date
         ]
       )
       new_id = db.last_insert_row_id
@@ -718,6 +732,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
       'box_weight' => box_weight,
       'total_weight' => total_weight,
       'remark' => (data.key?('remark') ? data['remark'] : existing['remark']).to_s.strip.upcase,
+      'dispatch_date' => (data.key?('dispatch_date') ? data['dispatch_date'] : existing['dispatch_date']).to_s.strip,
       'updated_at' => Time.now.strftime('%Y-%m-%d %H:%M:%S')
     }
 
@@ -812,6 +827,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
         finish = (it['finish_optional'] || '').to_s.strip.upcase
         status = (it['status'] || 'NOT READY').to_s.strip.upcase
         it_remark = (it['remark'] && !it['remark'].empty?) ? it['remark'].to_s.strip.upcase : remark
+        disp_date = (it.key?('dispatch_date') ? it['dispatch_date'] : '').to_s.strip
 
         if item_id && existing_ids.include?(item_id)
           db.execute(
@@ -820,14 +836,14 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
               order_no = ?, place_date = ?, status = ?, party_type = ?, manage_by = ?,
               client_name = ?, city = ?, state = ?, factory_name = ?, size = ?,
               product = ?, finish_optional = ?, grade = ?, box_qty = ?, box_weight = ?,
-              total_weight = ?, remark = ?, updated_at = ?
+              total_weight = ?, remark = ?, dispatch_date = ?, updated_at = ?
             WHERE id = ?
             SQL
             [
               target_order_no, pdate, status, party_type, manage_by,
               client_name, city, state, fn, size,
               product, finish, grade, box_qty, box_weight,
-              total_weight, it_remark, Time.now.strftime('%Y-%m-%d %H:%M:%S'),
+              total_weight, it_remark, disp_date, Time.now.strftime('%Y-%m-%d %H:%M:%S'),
               item_id
             ]
           )
@@ -838,13 +854,13 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
             INSERT INTO orders (
               order_no, place_date, status, party_type, manage_by, client_name, city, state,
               factory_name, size, product, finish_optional, grade,
-              box_qty, box_weight, total_weight, remark
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+              box_qty, box_weight, total_weight, remark, dispatch_date
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             SQL
             [
               target_order_no, pdate, status, party_type, manage_by, client_name, city, state,
               fn, size, product, finish, grade,
-              box_qty, box_weight, total_weight, it_remark
+              box_qty, box_weight, total_weight, it_remark, disp_date
             ]
           )
           submitted_ids << db.last_insert_row_id
@@ -882,6 +898,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
   def handle_update_order_no_status(order_no, req, res)
     data = parse_body(req)
     new_status = data['status'].to_s.strip.upcase
+    disp_date = data['dispatch_date'].to_s.strip
     db = get_db
 
     rows = db.execute('SELECT id FROM orders WHERE UPPER(order_no) = UPPER(?)', order_no)
@@ -890,7 +907,15 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
       return
     end
 
-    db.execute('UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE UPPER(order_no) = UPPER(?)', [new_status, order_no])
+    if new_status == 'DISPATCHED'
+      today = disp_date.empty? ? Date.today.strftime('%Y-%m-%d') : disp_date
+      db.execute("UPDATE orders SET status = ?, dispatch_date = CASE WHEN dispatch_date IS NULL OR dispatch_date = '' THEN ? ELSE dispatch_date END, updated_at = CURRENT_TIMESTAMP WHERE UPPER(order_no) = UPPER(?)", [new_status, today, order_no])
+    elsif !disp_date.empty?
+      db.execute('UPDATE orders SET status = ?, dispatch_date = ?, updated_at = CURRENT_TIMESTAMP WHERE UPPER(order_no) = UPPER(?)', [new_status, disp_date, order_no])
+    else
+      db.execute('UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE UPPER(order_no) = UPPER(?)', [new_status, order_no])
+    end
+
     render_json(res, {
       success: true,
       order_no: order_no,
@@ -970,7 +995,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
 
     csv_data = CSV.generate(headers: true) do |csv|
       csv << [
-        'ORDER NO', 'PLACE DATE', 'ORDER DAYS', 'STATUS', 'PARTY TYPE', 'MANAGE BY', 'PARTY NAME',
+        'ORDER NO', 'PLACE DATE', 'ORDER DAYS', 'STATUS', 'DISP. DATE', 'PARTY TYPE', 'MANAGE BY', 'PARTY NAME',
         'CENTER', 'STATE', 'FECTORY NAME', 'SIZE', 'PRODUCT',
         'FINISH-OPTIONAL', 'GRADE', 'BOX QTY', 'BOX WEIGHT', 'TOTAL WEIGHT', 'REMARK'
       ]
@@ -983,6 +1008,7 @@ class APIServlet < WEBrick::HTTPServlet::AbstractServlet
           pdate_fmt,
           aging,
           r['status'],
+          r['dispatch_date'] || '',
           r['party_type'],
           r['manage_by'],
           r['client_name'],

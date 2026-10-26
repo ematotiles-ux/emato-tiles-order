@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS orders (
     box_weight REAL NOT NULL CHECK (box_weight >= 0),
     total_weight REAL NOT NULL CHECK (total_weight >= 0),
     remark TEXT DEFAULT '',
+    dispatch_date TEXT DEFAULT '',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -65,6 +66,7 @@ SELECT
         ELSE 'NORMAL'
     END AS aging_category,
     remark,
+    dispatch_date,
     created_at,
     updated_at
 FROM orders;

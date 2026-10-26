@@ -457,7 +457,7 @@ function sortSheetBy(col) {
     currentSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
   } else {
     currentSortCol = col;
-    currentSortDir = (col === 'place_date' || col === 'box_qty' || col === 'total_weight' || col === 'order_day') ? 'desc' : 'asc';
+    currentSortDir = (col === 'place_date' || col === 'dispatch_date' || col === 'box_qty' || col === 'total_weight' || col === 'order_day') ? 'desc' : 'asc';
   }
   updateSortHeaderIcons();
   renderOrdersSheet();
@@ -536,6 +536,10 @@ function getGroupedFilteredOrders() {
       comp = a.total_boxes - b.total_boxes;
     } else if (currentSortCol === 'total_weight') {
       comp = a.total_weight - b.total_weight;
+    } else if (currentSortCol === 'dispatch_date') {
+      const dateA = a.items.find(x => x.dispatch_date)?.dispatch_date || '';
+      const dateB = b.items.find(x => x.dispatch_date)?.dispatch_date || '';
+      comp = dateA.localeCompare(dateB);
     } else {
       comp = (a.place_date || '').localeCompare(b.place_date || '');
     }
@@ -554,7 +558,7 @@ function renderOrdersSheet() {
   if (allOrders.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="13" style="text-align:center; padding: 48px 20px; color: #64748b;">
+        <td colspan="14" style="text-align:center; padding: 48px 20px; color: #64748b;">
           <div style="font-size: 2.2rem; margin-bottom: 8px;">📦</div>
           <div style="font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: 4px;">No Orders Entered Yet</div>
           <p style="font-size: 0.82rem; margin-bottom: 16px;">The order database is empty and ready for you to try out.</p>
@@ -576,7 +580,7 @@ function renderOrdersSheet() {
     }
     tbody.innerHTML = `
       <tr>
-        <td colspan="13" style="text-align:center; padding: 42px 20px; color: var(--text-muted);">
+        <td colspan="14" style="text-align:center; padding: 42px 20px; color: var(--text-muted);">
           <div style="font-size: 1.8rem; margin-bottom: 8px;">📋</div>
           <div style="font-weight: 700; font-size: 0.95rem; color: #334155; margin-bottom: 6px;">${emptyMsg}</div>
           <div style="margin-top: 10px;">
@@ -714,6 +718,9 @@ function renderOrdersSheet() {
           </div>
         </td>
         <td class="text-center" style="white-space: nowrap;">
+          <input type="date" class="disp-date-input ${o.dispatch_date ? 'has-date' : ''}" value="${escapeHtml(o.dispatch_date || '')}" onchange="updateDispatchDate(${o.id}, this.value)" title="Select Dispatch Date">
+        </td>
+        <td class="text-center" style="white-space: nowrap;">
           <button class="btn-icon" style="display:inline-flex; width:26px; height:26px; border:none; background:#ecfdf5; color:#059669; margin-right:4px;" onclick="addItemsToOrder('${escapeHtml(orderNoStr)}')" title="Add New Factory Product to Order ${escapeHtml(orderNoStr)}">
             ➕
           </button>
@@ -756,7 +763,7 @@ function renderOrdersSheet() {
       const allBilled = grp.items.every(x => x.status === 'BILLED DONE');
 
       sumTr.innerHTML = `
-        <td colspan="13">
+        <td colspan="14">
           <div class="order-group-summary-bar">
             <div class="og-left">
               <span class="og-badge">🧾 ORDER ${escapeHtml(grp.order_no)} TOTAL</span>
@@ -1541,6 +1548,26 @@ async function setOrderStatusKanban(orderId, newStatus) {
   await setOrderStatus(orderId, newStatus);
 }
 
+// Update dispatch date directly from table input
+async function updateDispatchDate(orderId, newDate) {
+  const o = allOrders.find(x => x.id === orderId);
+  const cleanDate = (newDate || '').trim();
+  if (o) o.dispatch_date = cleanDate;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/orders/${orderId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dispatch_date: cleanDate })
+    });
+    const dmy = cleanDate ? cleanDate.split('-').reverse().join('/') : '';
+    showToast(cleanDate ? `📅 Disp. Date set to ${dmy}` : 'Disp. Date cleared', 'success');
+  } catch (e) {
+    console.error(e);
+    showToast('Failed to update dispatch date', 'error');
+  }
+}
+
 // Set status of a single order item
 async function setOrderStatus(orderId, newStatus, shouldRerender = true) {
   const o = allOrders.find(x => x.id === orderId);
@@ -1549,11 +1576,18 @@ async function setOrderStatus(orderId, newStatus, shouldRerender = true) {
   const targetStatus = newStatus.trim().toUpperCase();
   o.status = targetStatus;
 
+  const payload = { status: targetStatus };
+  if (targetStatus === 'DISPATCHED' && !o.dispatch_date) {
+    const today = new Date().toISOString().slice(0, 10);
+    o.dispatch_date = today;
+    payload.dispatch_date = today;
+  }
+
   try {
     const res = await fetch(`${API_BASE}/api/orders/${orderId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: targetStatus })
+      body: JSON.stringify(payload)
     });
     const data = await res.json();
     const moveHint = targetStatus === 'DISPATCHED' ? ' (Moved to 🚚 DISPATCHED tab)' : (targetStatus === 'BILLED DONE' ? ' (Moved to 🧾 BILLED DONE tab)' : '');
@@ -1577,12 +1611,16 @@ async function setOrderStatus(orderId, newStatus, shouldRerender = true) {
 async function setEntireOrderNoStatus(orderNo, newStatus) {
   if (!orderNo) return;
   const targetStatus = newStatus.trim().toUpperCase();
+  const payload = { status: targetStatus };
+  if (targetStatus === 'DISPATCHED') {
+    payload.dispatch_date = new Date().toISOString().slice(0, 10);
+  }
 
   try {
     const res = await fetch(`${API_BASE}/api/orders/by-order-no/${encodeURIComponent(orderNo)}/status`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: targetStatus })
+      body: JSON.stringify(payload)
     });
     const data = await res.json();
     if (data.success) {
@@ -1864,6 +1902,9 @@ function addModalItemRow(data = {}) {
         <option value="DISPATCHED" ${data.status === 'DISPATCHED' ? 'selected' : ''}>DISPATCHED</option>
         <option value="BILLED DONE" ${data.status === 'BILLED DONE' ? 'selected' : ''}>BILLED DONE</option>
       </select>
+    </td>
+    <td>
+      <input type="date" class="item-row-input item-disp-date" value="${escapeHtml(data.dispatch_date || '')}" title="Dispatch Date">
     </td>
     <td class="text-center">
       <button type="button" class="btn-row-del" onclick="removeModalItemRow(this)" title="Remove this product row">✕</button>
@@ -2213,6 +2254,7 @@ async function handleFormSubmit(e) {
     const wt = parseFloat(r.querySelector('.item-wt').value);
     const tot = parseFloat(r.querySelector('.item-totwt').value) || (q * wt);
     const st = (r.querySelector('.item-status').value || 'NOT READY').trim().toUpperCase();
+    const dispDate = (r.querySelector('.item-disp-date')?.value || '').trim();
 
     // Skip completely empty blank rows if user left them unfilled
     if (!fn && !sz && (!q || isNaN(q))) {
@@ -2233,6 +2275,7 @@ async function handleFormSubmit(e) {
       box_weight: wt,
       total_weight: tot,
       status: st,
+      dispatch_date: dispDate || (st === 'DISPATCHED' ? new Date().toISOString().slice(0, 10) : ''),
       remark: remark
     };
     if (itemId) {

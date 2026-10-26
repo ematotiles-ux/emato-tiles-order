@@ -2038,4 +2038,45 @@ textarea::placeholder {
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
+/* ================= DISPATCH DATE INPUT ================= */
+.disp-date-input {
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #334155;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 3px 6px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 122px;
+  box-sizing: border-box;
+}
+
+.disp-date-input:hover {
+  border-color: #94a3b8;
+  background-color: #ffffff;
+}
+
+.disp-date-input:focus {
+  border-color: #0284c7;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+
+.disp-date-input.has-date {
+  background-color: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+  font-weight: 700;
+}
+
+.item-disp-date {
+  width: 100%;
+  font-size: 0.76rem;
+  padding: 4px 6px;
+}
+
 
