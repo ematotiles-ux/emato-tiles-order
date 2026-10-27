@@ -2694,7 +2694,7 @@
     "id": 153,
     "order_no": "EM-1046",
     "place_date": "2026-10-14",
-    "status": "NOT READY",
+    "status": "BILLED DONE",
     "party_type": "DEPO ORDER",
     "manage_by": "EMATO TILES",
     "client_name": "DEOP, OD",
@@ -2711,7 +2711,7 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-10-14 05:38:57",
-    "updated_at": "2026-10-22 05:39:26"
+    "updated_at": "2026-10-27 04:31:43"
   },
   {
     "id": 154,
