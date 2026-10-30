@@ -2901,7 +2901,7 @@
     "id": 162,
     "order_no": "EM-1052",
     "place_date": "2026-10-30",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEALER",
     "manage_by": "BHURA BHAI",
     "client_name": "INDOTEK CERAMIC",
@@ -2918,6 +2918,6 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-10-30 10:09:02",
-    "updated_at": "2026-10-30 10:09:02"
+    "updated_at": "2026-10-30 10:09:21"
   }
 ]
