@@ -1929,7 +1929,7 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-10-06 12:00:34",
-    "updated_at": "2026-11-02 08:58:24"
+    "updated_at": "2026-11-03 12:41:38"
   },
   {
     "id": 118,
@@ -2988,5 +2988,28 @@
     "dispatch_date": "",
     "created_at": "2026-11-03 12:00:10",
     "updated_at": "2026-11-03 12:00:10"
+  },
+  {
+    "id": 166,
+    "order_no": "EM-1035",
+    "place_date": "2026-10-06",
+    "status": "NOT READY",
+    "party_type": "DEALER",
+    "manage_by": "RINKU",
+    "client_name": "THAKUR JI TRADERS",
+    "city": "KHAGARIA",
+    "state": "BIHAR",
+    "factory_name": "SUNCORE",
+    "size": "2X4",
+    "product": "DC",
+    "finish_optional": "",
+    "grade": "PRM",
+    "box_qty": 150,
+    "box_weight": 26.5,
+    "total_weight": 3975.0,
+    "remark": "",
+    "dispatch_date": "",
+    "created_at": "2026-11-03 12:41:38",
+    "updated_at": "2026-11-03 12:41:38"
   }
 ]
