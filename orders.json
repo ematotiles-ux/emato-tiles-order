@@ -1935,7 +1935,7 @@
     "id": 118,
     "order_no": "EM-1036",
     "place_date": "2026-10-07",
-    "status": "DISPATCHED",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "HARSHIT",
     "client_name": "JVS PALACE",
@@ -1952,13 +1952,13 @@
     "remark": "",
     "dispatch_date": "2026-11-04",
     "created_at": "2026-10-07 10:43:05",
-    "updated_at": "2026-11-04 04:46:19"
+    "updated_at": "2026-11-06 06:48:39"
   },
   {
     "id": 119,
     "order_no": "EM-1036",
     "place_date": "2026-10-07",
-    "status": "DISPATCHED",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "HARSHIT",
     "client_name": "JVS PALACE",
@@ -1975,13 +1975,13 @@
     "remark": "",
     "dispatch_date": "2026-11-04",
     "created_at": "2026-10-07 10:43:05",
-    "updated_at": "2026-11-04 04:46:42"
+    "updated_at": "2026-11-06 06:48:39"
   },
   {
     "id": 120,
     "order_no": "EM-1036",
     "place_date": "2026-10-07",
-    "status": "DISPATCHED",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "HARSHIT",
     "client_name": "JVS PALACE",
@@ -1998,13 +1998,13 @@
     "remark": "",
     "dispatch_date": "2026-11-04",
     "created_at": "2026-10-07 10:43:05",
-    "updated_at": "2026-11-04 04:46:22"
+    "updated_at": "2026-11-06 06:48:39"
   },
   {
     "id": 121,
     "order_no": "EM-1036",
     "place_date": "2026-10-07",
-    "status": "DISPATCHED",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "HARSHIT",
     "client_name": "JVS PALACE",
@@ -2021,13 +2021,13 @@
     "remark": "",
     "dispatch_date": "2026-11-04",
     "created_at": "2026-10-07 10:43:05",
-    "updated_at": "2026-11-04 04:46:45"
+    "updated_at": "2026-11-06 06:48:39"
   },
   {
     "id": 122,
     "order_no": "EM-1036",
     "place_date": "2026-10-07",
-    "status": "DISPATCHED",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "HARSHIT",
     "client_name": "JVS PALACE",
@@ -2044,13 +2044,13 @@
     "remark": "",
     "dispatch_date": "2026-11-04",
     "created_at": "2026-10-07 10:43:05",
-    "updated_at": "2026-11-04 04:46:30"
+    "updated_at": "2026-11-06 06:48:39"
   },
   {
     "id": 123,
     "order_no": "EM-1036",
     "place_date": "2026-10-07",
-    "status": "DISPATCHED",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "HARSHIT",
     "client_name": "JVS PALACE",
@@ -2067,7 +2067,7 @@
     "remark": "",
     "dispatch_date": "2026-11-04",
     "created_at": "2026-10-07 10:43:05",
-    "updated_at": "2026-11-04 04:46:51"
+    "updated_at": "2026-11-06 06:48:39"
   },
   {
     "id": 124,
