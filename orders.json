@@ -3551,7 +3551,7 @@
     "client_name": "INDOTEK CERAMIC",
     "city": "CHIBBROL",
     "state": "ANDHRA PRADESH",
-    "factory_name": "LEDSUN",
+    "factory_name": "LEADSUN",
     "size": "2X2",
     "product": "PORCELAIN",
     "finish_optional": "",
@@ -3562,6 +3562,6 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-11-14 05:47:42",
-    "updated_at": "2026-11-14 05:47:42"
+    "updated_at": "2026-11-16 06:30:20"
   }
 ]
