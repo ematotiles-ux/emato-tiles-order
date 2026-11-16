@@ -3338,7 +3338,7 @@
     "id": 182,
     "order_no": "EM-1059",
     "place_date": "2026-11-06",
-    "status": "NOT READY",
+    "status": "READY",
     "party_type": "DEPO ORDER",
     "manage_by": "EMATO TILES",
     "client_name": "DEOP, OD",
@@ -3355,7 +3355,7 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-11-06 06:08:22",
-    "updated_at": "2026-11-06 06:08:22"
+    "updated_at": "2026-11-16 07:30:12"
   },
   {
     "id": 183,
