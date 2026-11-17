@@ -3240,7 +3240,7 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-11-06 05:53:37",
-    "updated_at": "2026-11-17 05:52:19"
+    "updated_at": "2026-11-17 06:36:36"
   },
   {
     "id": 179,
@@ -3258,12 +3258,12 @@
     "finish_optional": "",
     "grade": "PRM",
     "box_qty": 2,
-    "box_weight": 4750.0,
-    "total_weight": 9500.0,
+    "box_weight": 4825.0,
+    "total_weight": 9650.0,
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-11-06 05:53:37",
-    "updated_at": "2026-11-16 09:42:10"
+    "updated_at": "2026-11-17 06:36:36"
   },
   {
     "id": 180,
@@ -3286,7 +3286,7 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-11-06 05:53:37",
-    "updated_at": "2026-11-16 09:42:10"
+    "updated_at": "2026-11-17 06:36:36"
   },
   {
     "id": 181,
