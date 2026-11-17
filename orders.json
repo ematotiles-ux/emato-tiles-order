@@ -2211,7 +2211,7 @@
     "id": 131,
     "order_no": "EM-1039",
     "place_date": "2026-10-09",
-    "status": "READY",
+    "status": "BILLED DONE",
     "party_type": "PROJECT",
     "manage_by": "ANAND BHAI",
     "client_name": "TRISHA FOILS",
@@ -2228,7 +2228,7 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-10-09 11:48:26",
-    "updated_at": "2026-10-09 11:48:26"
+    "updated_at": "2026-11-17 10:06:42"
   },
   {
     "id": 132,
