@@ -3430,7 +3430,7 @@
     "id": 187,
     "order_no": "EM-1061",
     "place_date": "2026-11-06",
-    "status": "READY",
+    "status": "NOT READY",
     "party_type": "PROJECT",
     "manage_by": "ANKIT BHAI",
     "client_name": "HOME APEX",
@@ -3447,7 +3447,7 @@
     "remark": "",
     "dispatch_date": "",
     "created_at": "2026-11-06 07:45:31",
-    "updated_at": "2026-11-17 07:42:42"
+    "updated_at": "2026-11-17 07:43:16"
   },
   {
     "id": 188,
