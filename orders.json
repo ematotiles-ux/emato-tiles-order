@@ -3660,7 +3660,7 @@
     "id": 197,
     "order_no": "EM-1065",
     "place_date": "2026-11-16",
-    "status": "READY",
+    "status": "DISPATCHED",
     "party_type": "DEALER",
     "manage_by": "DIPIKA",
     "client_name": "KOHINOOR MARBLE AND TILES",
@@ -3677,7 +3677,7 @@
     "remark": "",
     "dispatch_date": "0002-11-17",
     "created_at": "2026-11-16 11:28:13",
-    "updated_at": "2026-11-17 04:44:40"
+    "updated_at": "2026-11-18 04:50:31"
   },
   {
     "id": 198,
