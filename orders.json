@@ -2786,7 +2786,7 @@
     "id": 158,
     "order_no": "EM-1050",
     "place_date": "2026-10-29",
-    "status": "READY",
+    "status": "DISPATCHED",
     "party_type": "DEALER",
     "manage_by": "BHURA BHAI",
     "client_name": "INDOTEK CERAMIC",
@@ -2801,9 +2801,9 @@
     "box_weight": 25.0,
     "total_weight": 22500.0,
     "remark": "",
-    "dispatch_date": "",
+    "dispatch_date": "2026-11-20",
     "created_at": "2026-10-29 08:29:34",
-    "updated_at": "2026-11-07 05:51:53"
+    "updated_at": "2026-11-20 04:37:07"
   },
   {
     "id": 159,
