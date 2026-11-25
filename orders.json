@@ -4465,7 +4465,7 @@
     "id": 234,
     "order_no": "EM-1075",
     "place_date": "2026-11-25",
-    "status": "READY",
+    "status": "DISPATCHED",
     "party_type": "DEALER",
     "manage_by": "ANAND BHAI",
     "client_name": "TILES CENTER",
@@ -4480,9 +4480,9 @@
     "box_weight": 26.5,
     "total_weight": 2650.0,
     "remark": "",
-    "dispatch_date": "",
+    "dispatch_date": "2026-11-25",
     "created_at": "2026-11-25 04:23:00",
-    "updated_at": "2026-11-25 04:23:00"
+    "updated_at": "2026-11-25 05:55:00"
   },
   {
     "id": 235,
